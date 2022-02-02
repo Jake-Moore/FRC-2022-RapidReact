@@ -13,7 +13,9 @@ public class RunStraightArms extends CommandBase {
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        kClimbArms.setStraightSolenoids(true);
+    }
 
     @Override
     public void execute() {
@@ -23,5 +25,6 @@ public class RunStraightArms extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         kClimbArms.setStraightArms(0);
+        kClimbArms.setStraightSolenoids(false);
     }
 }

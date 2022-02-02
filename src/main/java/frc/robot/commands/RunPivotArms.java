@@ -13,7 +13,9 @@ public class RunPivotArms extends CommandBase {
     }
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+        kClimbArms.setPivotSolenoids(true);
+    }
 
     @Override
     public void execute() {
@@ -23,5 +25,6 @@ public class RunPivotArms extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         kClimbArms.setPivotArms(0);
+        kClimbArms.setPivotSolenoids(false);
     }
 }
