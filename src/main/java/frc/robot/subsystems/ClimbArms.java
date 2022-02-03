@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,17 +10,17 @@ import frc.robot.Constants;
 
 public class ClimbArms extends SubsystemBase {
     //Rope Motors
-    public final TalonFX mLeftStraight;
-    public final TalonFX mLeftPivot;
-    public final TalonFX mRightStraight;
-    public final TalonFX mRightPivot;
+    public final WPI_TalonFX mLeftStraight;
+    public final WPI_TalonFX mLeftPivot;
+    public final WPI_TalonFX mRightStraight;
+    public final WPI_TalonFX mRightPivot;
     //Brake Solenoids
     public final Solenoid sLeftStraight;
     public final Solenoid sLeftPivot;
     public final Solenoid sRightStraight;
     public final Solenoid sRightPivot;
     //Pivot Motor
-    public final TalonFX mPivoter;
+    public final WPI_TalonFX mPivoter;
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
     public ClimbArms() {
@@ -38,11 +38,44 @@ public class ClimbArms extends SubsystemBase {
 
         //Pivot Motor
         mPivoter       = setupClimbFalcon(Constants.mPivoter,       false);
+
+        /* TalonFX Position Closed Loop Example
+
+        mPivoter.configFactoryDefault();
+        mPivoter.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, Constants.PID_LOOP_IDX, Constants.TIMEOUT_MS);
+
+        mPivoter.configNominalOutputForward(0, Constants.TIMEOUT_MS);
+        mPivoter.configNominalOutputReverse(0, Constants.TIMEOUT_MS);
+        mPivoter.configPeakOutputForward(1, Constants.TIMEOUT_MS);
+        mPivoter.configPeakOutputReverse(-1, Constants.TIMEOUT_MS);
+        mPivoter.configAllowableClosedloopError(Constants.PID_LOOP_IDX, 0, Constants.TIMEOUT_MS);
+
+        mPivoter.config_kP(Constants.PID_LOOP_IDX, Constants.PIVOT_P, Constants.TIMEOUT_MS);
+        mPivoter.config_kI(Constants.PID_LOOP_IDX, Constants.PIVOT_I, Constants.TIMEOUT_MS);
+        mPivoter.config_kD(Constants.PID_LOOP_IDX, Constants.PIVOT_D, Constants.TIMEOUT_MS);
+        mPivoter.config_kF(Constants.PID_LOOP_IDX, Constants.PIVOT_F, Constants.TIMEOUT_MS);
+
+        mPivoter.set(TalonFXControlMode.Position, 0);
+
+        -----------------------------------------------------
+
+        double motorOutput = mPivoter.getMotorOutputPercent();
+        double targetPositionRotations = <rotations> * 2048; //2048 ticks per rotation
+        mPivoter.set(TalonFXControlMode.Position, targetPositionRotations);
+
+        -----------------------------------------------------
+
+          Steps to Tune Position PID
+        1. Set , , and  to zero.
+        2. Increase  until the output starts to oscillate around the setpoint.
+        3. Increase  as much as possible without introducing jittering in the system response.
+
+        */
     }
 
     //Simplifies code by calling common neutralMode and sensor methods in fewer lines
-    private TalonFX setupClimbFalcon(int id, boolean invert) {
-        TalonFX talon = new TalonFX(id);
+    private WPI_TalonFX setupClimbFalcon(int id, boolean invert) {
+        WPI_TalonFX talon = new WPI_TalonFX(id);
         talon.setNeutralMode(NeutralMode.Brake);
         talon.setSelectedSensorPosition(0);
         talon.setInverted(invert);
