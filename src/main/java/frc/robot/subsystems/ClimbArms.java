@@ -10,31 +10,31 @@ import frc.robot.Constants;
 
 public class ClimbArms extends SubsystemBase {
     //Rope Motors
-    public final WPI_TalonFX mLeftStraight;
-    public final WPI_TalonFX mLeftPivot;
+    //public final WPI_TalonFX mLeftStraight;
+    //public final WPI_TalonFX mLeftPivot;
     public final WPI_TalonFX mRightStraight;
-    public final WPI_TalonFX mRightPivot;
+    //public final WPI_TalonFX mRightPivot;
     //Brake Solenoids
-    public final Solenoid sLeftStraight;
-    public final Solenoid sLeftPivot;
+    //public final Solenoid sLeftStraight;
+    //public final Solenoid sLeftPivot;
     public final Solenoid sRightStraight;
-    public final Solenoid sRightPivot;
+    //public final Solenoid sRightPivot;
     //Pivot Motor
     public final WPI_TalonFX mPivoter;
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
     public ClimbArms() {
         //Rope Motors
-        mLeftStraight  = setupClimbFalcon(Constants.mLeftStraight,  false);
-        mLeftPivot     = setupClimbFalcon(Constants.mLeftPivot,     true );
+        //mLeftStraight  = setupClimbFalcon(Constants.mLeftStraight,  false);
+        //mLeftPivot     = setupClimbFalcon(Constants.mLeftPivot,     true );
         mRightStraight = setupClimbFalcon(Constants.mRightStraight, true );
-        mRightPivot    = setupClimbFalcon(Constants.mRightPivot,    false);
+        //mRightPivot    = setupClimbFalcon(Constants.mRightPivot,    false);
 
         //Brake Solenoids
-        sLeftStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
-        sLeftPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
+        //sLeftStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
+        //sLeftPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
         sRightStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
-        sRightPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 3);
+        //sRightPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 3);
 
         //Pivot Motor
         mPivoter       = setupClimbFalcon(Constants.mPivoter,       false);
@@ -76,28 +76,28 @@ public class ClimbArms extends SubsystemBase {
     //Simplifies code by calling common neutralMode and sensor methods in fewer lines
     private WPI_TalonFX setupClimbFalcon(int id, boolean invert) {
         WPI_TalonFX talon = new WPI_TalonFX(id);
-        talon.setNeutralMode(NeutralMode.Brake);
+        talon.setNeutralMode(NeutralMode.Coast);
         talon.setSelectedSensorPosition(0);
         talon.setInverted(invert);
         return talon;
     }
 
     public void setStraightArms(double power) {
-        mLeftStraight.set(TalonFXControlMode.PercentOutput, power);
+        //mLeftStraight.set(TalonFXControlMode.PercentOutput, power);
         mRightStraight.set(TalonFXControlMode.PercentOutput, power);
     }
     public void setStraightSolenoids(boolean on) {
-        sLeftStraight.set(on);
+        //LeftStraight.set(on);
         sRightStraight.set(on);
     }
 
     public void setPivotArms(double power) {
-        mLeftPivot.set(TalonFXControlMode.PercentOutput, power);
-        mRightPivot.set(TalonFXControlMode.PercentOutput, power);
+        //mLeftPivot.set(TalonFXControlMode.PercentOutput, power);
+        //mRightPivot.set(TalonFXControlMode.PercentOutput, power);
     }
     public void setPivotSolenoids(boolean on) {
-        sLeftPivot.set(on);
-        sRightPivot.set(on);
+        //sLeftPivot.set(on);
+        //sRightPivot.set(on);
     }
 
     public void setPivotPivot(double power) {
