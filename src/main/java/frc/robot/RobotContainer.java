@@ -42,30 +42,30 @@ public class RobotContainer {
         //joyBBR.whileHeld(new RunStraightArms(climbArms, .2));
         //joyBTR.whileHeld(new RunStraightArms(climbArms, -.2));
 
-        joyBBL.whileHeld(new RunPivotArms(climbArms, .2));
-        joyBTL.whileHeld(new RunPivotArms(climbArms, -.2));
+        joyBBL.whileHeld(new ParallelDeadlineGroup(
+                new RunPivotArms(climbArms, .5)
+        ));
+        joyBTL.whileHeld(new ParallelDeadlineGroup(
+                new RunPivotArms(climbArms, -.5)
+        ));
 
         joyBSquare.whileHeld(new RunArmPivot(climbArms, .2));
         joyBCircle.whileHeld(new RunArmPivot(climbArms, -.2));
 
         joyBBR.whileHeld(new ParallelDeadlineGroup(
-                new RunStraightSolenoid(climbArms, true),
-                new RunTimer(0.5),
-                new RunStraightArms(climbArms, .2)
+                new RunStraightArms(climbArms, .5)
         ));
         joyBTR.whileHeld(new ParallelDeadlineGroup(
-                new RunStraightArms(climbArms, 0),
-                new RunTimer(0.5),
-                new RunStraightArms(climbArms, -.2)
+                new RunStraightArms(climbArms, -.5)
         ));
 
     }
 
     public void updateSmartDashboard() {
-        //SmartDashboard.putNumber("LeftStraightPos",  climbArms.mLeftStraight.getSelectedSensorPosition());
-        //SmartDashboard.putNumber("LeftPivotPos",     climbArms.mLeftPivot.getSelectedSensorPosition());
+        SmartDashboard.putNumber("LeftStraightPos",  climbArms.mLeftStraight.getSelectedSensorPosition());
+        SmartDashboard.putNumber("LeftPivotPos",     climbArms.mLeftPivot.getSelectedSensorPosition());
         SmartDashboard.putNumber("RightStraightPos", climbArms.mRightStraight.getSelectedSensorPosition());
-        //SmartDashboard.putNumber("RightPivotPos",    climbArms.mRightPivot.getSelectedSensorPosition());
+        SmartDashboard.putNumber("RightPivotPos",    climbArms.mRightPivot.getSelectedSensorPosition());
 
         SmartDashboard.putNumber("PivoterPos",       climbArms.mPivoter.getSelectedSensorPosition());
     }

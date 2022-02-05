@@ -7,8 +7,8 @@ public class Constants {
     public static final int sJoyID = 1;
 
     //Motors
-    public static final int mLeftStraight = 5;
-    public static final int mLeftPivot = 6;
+    public static final int mLeftStraight = 6;
+    public static final int mLeftPivot = 5;
     public static final int mRightPivot = 7;
     public static final int mRightStraight = 8;
     public static final int mPivoter = 9;

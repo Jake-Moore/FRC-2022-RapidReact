@@ -4,37 +4,41 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+@SuppressWarnings("ununsed")
 public class ClimbArms extends SubsystemBase {
     //Rope Motors
-    //public final WPI_TalonFX mLeftStraight;
-    //public final WPI_TalonFX mLeftPivot;
+    public final WPI_TalonFX mLeftStraight;
+    public final WPI_TalonFX mLeftPivot;
     public final WPI_TalonFX mRightStraight;
-    //public final WPI_TalonFX mRightPivot;
+    public final WPI_TalonFX mRightPivot;
     //Brake Solenoids
     //public final Solenoid sLeftStraight;
     //public final Solenoid sLeftPivot;
-    public final Solenoid sRightStraight;
+    //public final Solenoid sRightStraight;
     //public final Solenoid sRightPivot;
+    //public final Servo sRightStraight;
     //Pivot Motor
     public final WPI_TalonFX mPivoter;
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
     public ClimbArms() {
         //Rope Motors
-        //mLeftStraight  = setupClimbFalcon(Constants.mLeftStraight,  false);
-        //mLeftPivot     = setupClimbFalcon(Constants.mLeftPivot,     true );
+        mLeftStraight  = setupClimbFalcon(Constants.mLeftStraight,  false);
+        mLeftPivot     = setupClimbFalcon(Constants.mLeftPivot,     false );
         mRightStraight = setupClimbFalcon(Constants.mRightStraight, true );
-        //mRightPivot    = setupClimbFalcon(Constants.mRightPivot,    false);
+        mRightPivot    = setupClimbFalcon(Constants.mRightPivot,    true);
 
         //Brake Solenoids
         //sLeftStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
         //sLeftPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
-        sRightStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
+        //sRightStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
         //sRightPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 3);
+        //sRightStraight = new Servo(0);
 
         //Pivot Motor
         mPivoter       = setupClimbFalcon(Constants.mPivoter,       false);
@@ -66,7 +70,7 @@ public class ClimbArms extends SubsystemBase {
         -----------------------------------------------------
 
           Steps to Tune Position PID
-        1. Set , , and  to zero.
+        1. Set kP, kI, and kD to zero.
         2. Increase  until the output starts to oscillate around the setpoint.
         3. Increase  as much as possible without introducing jittering in the system response.
 
@@ -83,17 +87,22 @@ public class ClimbArms extends SubsystemBase {
     }
 
     public void setStraightArms(double power) {
-        //mLeftStraight.set(TalonFXControlMode.PercentOutput, power);
+        mLeftStraight.set(TalonFXControlMode.PercentOutput, power);
         mRightStraight.set(TalonFXControlMode.PercentOutput, power);
     }
     public void setStraightSolenoids(boolean on) {
         //LeftStraight.set(on);
-        sRightStraight.set(on);
+        //sRightStraight.set(on);
+        //if (on) {
+        //    sRightStraight.setAngle(0);
+        //}else {
+        //    sRightStraight.setAngle(180);
+        //}
     }
 
     public void setPivotArms(double power) {
-        //mLeftPivot.set(TalonFXControlMode.PercentOutput, power);
-        //mRightPivot.set(TalonFXControlMode.PercentOutput, power);
+        mLeftPivot.set(TalonFXControlMode.PercentOutput, power);
+        mRightPivot.set(TalonFXControlMode.PercentOutput, power);
     }
     public void setPivotSolenoids(boolean on) {
         //sLeftPivot.set(on);
