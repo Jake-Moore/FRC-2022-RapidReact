@@ -16,7 +16,12 @@ public class Constants {
     //  PID
     public static final int PID_LOOP_IDX = 0;
     public static final int TIMEOUT_MS = 30;
-    //Pivoter
+    //Rope Motors PID
+    public static final double ROPE_P = 0.15;
+    public static final double ROPE_I = 0.0;
+    public static final double ROPE_D = 0.0;
+    public static final double ROPE_F = 0.0;
+    //Pivot Motor PID
     public static final double PIVOT_P = 0.15;
     public static final double PIVOT_I = 0.0;
     public static final double PIVOT_D = 0.0;
