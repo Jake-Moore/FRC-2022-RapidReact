@@ -60,16 +60,16 @@ public class RobotContainer {
         //joyBCircle.whileHeld(new RunArmPivot(climbArms, -.2));
 
         //Straight arms controls
-        joyBTriangle.whileHeld(new RunStraightRopePos(climbArms, 200000));
+        joyBTriangle.whileHeld(new RunStraightRopePos(climbArms, 230000));
         joyBX.whileHeld(new RunStraightRopePos(climbArms, 0));
-        joyBBR.whileHeld(new RunStraightRopePosAdj(climbArms, 1000));
-        joyBTR.whileHeld(new RunStraightRopePosAdj(climbArms, -1000));
+        joyBBR.whileHeld(new RunStraightRopePosAdj(climbArms, 5000));
+        joyBTR.whileHeld(new RunStraightRopePosAdj(climbArms, -5000));
 
         //Pivot Arms Controls
-        joyPOVN.whileHeld(new RunPivotRopePos(climbArms, 224000));
+        joyPOVN.whileHeld(new RunPivotRopePos(climbArms, 287000));
         joyPOVS.whileHeld(new RunPivotRopePos(climbArms, 0));
-        joyBBL.whileHeld(new RunPivotRopePosAdj(climbArms, 1000));
-        joyBTL.whileHeld(new RunPivotRopePosAdj(climbArms, -1000));
+        joyBBL.whileHeld(new RunPivotRopePosAdj(climbArms, 5000));
+        joyBTL.whileHeld(new RunPivotRopePosAdj(climbArms, -5000));
 
         //mPivoter controls
         joyBCircle.whileHeld(new RunPivotPos(climbArms, 13000));

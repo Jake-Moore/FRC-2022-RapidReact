@@ -16,7 +16,7 @@ public class RunPivotRopePosAdj extends CommandBase {
 
     @Override
     public void execute() {
-        climbArms.setPivotArmsPos(climbArms.mLeftPivot.getSelectedSensorPosition() + change);
+        climbArms.setPivotArmsPos(Math.max(0, climbArms.mLeftPivot.getSelectedSensorPosition() + change));
     }
 
     @Override

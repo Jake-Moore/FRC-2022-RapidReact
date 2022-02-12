@@ -16,7 +16,7 @@ public class RunStraightRopePosAdj extends CommandBase {
 
     @Override
     public void execute() {
-        climbArms.setStraightArmsPos(climbArms.mLeftStraight.getSelectedSensorPosition() + change);
+        climbArms.setStraightArmsPos(Math.max(0, climbArms.mLeftStraight.getSelectedSensorPosition() + change));
     }
 
     @Override

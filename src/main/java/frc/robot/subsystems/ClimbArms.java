@@ -32,9 +32,9 @@ public class ClimbArms extends SubsystemBase {
     public ClimbArms() {
         //Rope Motors
         mLeftStraight  = setupClimbFalcon(Constants.mLeftStraight,  false, ropePID);
-        mLeftPivot     = setupClimbFalcon(Constants.mLeftPivot,     false, ropePID);
+        mLeftPivot     = setupClimbFalcon(Constants.mLeftPivot,     true, ropePID);
         mRightStraight = setupClimbFalcon(Constants.mRightStraight, true , ropePID);
-        mRightPivot    = setupClimbFalcon(Constants.mRightPivot,    true , ropePID);
+        mRightPivot    = setupClimbFalcon(Constants.mRightPivot,    false , ropePID);
 
         //Brake Solenoids
         //sLeftStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
