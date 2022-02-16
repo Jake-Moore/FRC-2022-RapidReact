@@ -20,5 +20,7 @@ public class RunPivotRopePos extends CommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {}
+    public boolean isFinished() {
+        return (Math.abs(climbArms.getPivotArmsPos() - pos) <= 1000);
+    }
 }

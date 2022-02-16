@@ -20,5 +20,7 @@ public class RunStraightRopePos extends CommandBase {
     }
 
     @Override
-    public void end(boolean interrupted) {}
+    public boolean isFinished() {
+        return (Math.abs(climbArms.getStraightArmsPos() - pos) <= 1000);
+    }
 }

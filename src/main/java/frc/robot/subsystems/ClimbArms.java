@@ -25,7 +25,7 @@ public class ClimbArms extends SubsystemBase {
 
     //PID Sets
     public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 512, 0.5);
-    public final PID pivotPID = new PID(Constants.PIVOT_P, Constants.PIVOT_I, Constants.PIVOT_D, Constants.PIVOT_F, 128, 0.25);
+    public final PID pivotPID = new PID(Constants.PIVOT_P, Constants.PIVOT_I, Constants.PIVOT_D, Constants.PIVOT_F, 128, 0.1);
 
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
@@ -86,13 +86,12 @@ public class ClimbArms extends SubsystemBase {
         return talon;
     }
 
-    public void setStraightArms(double power) {
-        mLeftStraight.set(TalonFXControlMode.PercentOutput, power);
-        mRightStraight.set(TalonFXControlMode.PercentOutput, power);
-    }
     public void setStraightArmsPos(double pos) {
         mLeftStraight.set(TalonFXControlMode.Position, pos);
         mRightStraight.set(TalonFXControlMode.Position, pos);
+    }
+    public double getStraightArmsPos() {
+        return Math.min(mLeftStraight.getSelectedSensorPosition(), mRightStraight.getSelectedSensorPosition());
     }
 
     public void setStraightSolenoids(boolean on) {
@@ -105,18 +104,20 @@ public class ClimbArms extends SubsystemBase {
         //}
     }
 
-    public void setPivotArms(double power) {
-        mLeftPivot.set(TalonFXControlMode.PercentOutput, power);
-        mRightPivot.set(TalonFXControlMode.PercentOutput, power);
-    }
     public void setPivotArmsPos(double pos) {
         mLeftPivot.set(TalonFXControlMode.Position, pos);
         mRightPivot.set(TalonFXControlMode.Position, pos);
+    }
+    public double getPivotArmsPos() {
+        return Math.min(mLeftPivot.getSelectedSensorPosition(), mRightPivot.getSelectedSensorPosition());
     }
 
 
     public void setPivotPos(double pos) {
         mPivoter.set(TalonFXControlMode.Position, pos);
+    }
+    public double getPivotPos() {
+        return mPivoter.getSelectedSensorPosition();
     }
 
     public void setPivotSolenoids(boolean on) {
