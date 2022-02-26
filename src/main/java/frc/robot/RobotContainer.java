@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
@@ -67,32 +66,68 @@ public class RobotContainer {
 
 
         joyBTL.whileHeld(new RunStraightRopePosAdj(climbArms, 10000));
-        joyBBL.whileHeld(new RunPivotPos(climbArms, 13000));
-        joyBShare.whileHeld(new ParallelRaceGroup(
+        joyBBL.whileHeld(new RunPivotPos(climbArms, 7000));
+        joyBShare.whileHeld(new RunBrake(climbArms, Constants.sLeftStart, Constants.sRightStart).andThen(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 0),
-                new RunPivotRopePos(climbArms, 251000)
-        ));
+                new RunPivotRopePos(climbArms, 240000)
+        )));
         joyBBig.whileHeld(new RunPivotPosAdj(climbArms, -1000));
-        joyBOptions.whileHeld(new ParallelRaceGroup(
+        /*
+        joyBOptions.whileHeld(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 100000),
-                new RunPivotRopePos(climbArms, 0),
-                new RunPivotPos(climbArms, 10000)
+                new RunPivotRopePos(climbArms,
+                        0),
+                new RunPivotPos(climbArms, 7000)
         ));
         joyBBR.whenPressed(new ParallelCommandGroup(
                 new RunPivotRopePos(climbArms, 50000),
                 new RunStraightRopePos(climbArms, 0)
-        //).andThen(new RunPivotPos(climbArms, -13000/3D)));
         ).andThen(new RunPivotPos(climbArms, -13000/3D)));
 
-        joyBTR.whileHeld(new ParallelRaceGroup(
+        joyBTR.whileHeld(new ParallelCommandGroup(
+                new RunBrake(climbArms, 115, 60),
                 new RunStraightRopePos(climbArms, 100000),
                 new RunPivotRopePos(climbArms, 0)
         ));
-        joyBTriangle.whileHeld(new RunPivotPos(climbArms, 3250).andThen(new RunStraightRopePos(climbArms, 0)));
+        joyBTriangle.whileHeld(new RunPivotPos(climbArms, 3250).andThen(new RunStraightRopePos(climbArms, 0)).andThen(new RunPivotPos(climbArms, 0)));
+         */
+
+        joyBOptions.whenPressed(
+            new ParallelCommandGroup(
+                new RunStraightRopePos(climbArms, 100000),
+                new RunPivotRopePos(climbArms, 0),
+                new RunPivotPos(climbArms, 7000)
+            ).andThen(new ParallelCommandGroup(
+                    new RunPivotRopePos(climbArms, 50000),
+                    new RunStraightRopePos(climbArms, 0)
+            )).andThen(new RunPivotPos(climbArms, -13000/3D)
+            ).andThen(new ParallelCommandGroup(
+                    //new RunBrake(climbArms, 115, 60),
+                    new RunStraightRopePos(climbArms, 100000),
+                    new RunPivotRopePos(climbArms, 0)
+            )).andThen(new RunPivotPos(climbArms, 3250)
+            ).andThen(new RunStraightRopePos(climbArms, 0)
+            ).andThen(new RunPivotPos(climbArms, 0))
+        );
+        joyBBR.whenPressed(new RunBrake(climbArms, Constants.sLeftStart, Constants.sRightStart).andThen(
+            new ParallelCommandGroup(
+                new RunStraightRopePos(climbArms, 0),
+                new RunPivotRopePos(climbArms, 120000)
+            ).andThen(new RunPivotPos(climbArms, 3500)
+            ).andThen(new RunPivotRopePos(climbArms, 240000)
+            ).andThen(new RunPivotPos(climbArms, 7000))
+        ));
+        joyBTR.whenPressed(new ParallelCommandGroup(
+                new RunStraightRopePos(climbArms, 100000),
+                new RunBrake(climbArms, 115, 60),
+                new RunPivotRopePos(climbArms, 0),
+                new RunPivotPos(climbArms, 7000)
+            ).andThen(new RunPivotPos(climbArms, -13000/3D)
+            ).andThen(new RunStraightRopePos(climbArms, 6000))
+        );
 
 
-
-        joyBPS.whileHeld(new ParallelRaceGroup(
+        joyBPS.whileHeld(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 0),
                 new RunPivotRopePos(climbArms, 0),
                 new RunPivotPos(climbArms, 0)

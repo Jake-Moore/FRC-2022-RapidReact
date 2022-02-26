@@ -13,6 +13,13 @@ public class Constants {
     public static final int mRightStraight = 8;
     public static final int mPivoter = 9;
 
+    //Servos
+    public static final int servoLeft = 0;
+    public static final int servoRight = 1;
+
+    public static final int sLeftStart = 85;
+    public static final int sRightStart = 97;
+
     //  PID
     public static final int PID_LOOP_IDX = 0;
     public static final int TIMEOUT_MS = 30;

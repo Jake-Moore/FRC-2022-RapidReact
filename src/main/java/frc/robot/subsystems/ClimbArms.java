@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -22,6 +23,10 @@ public class ClimbArms extends SubsystemBase {
     //public final Servo sRightStraight;
     //Pivot Motor
     public final WPI_TalonFX mPivoter;
+
+    //Brake Servos
+    public final Servo brakeL;
+    public final Servo brakeR;
 
     //PID Sets
     public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 512, 0.5);
@@ -45,6 +50,12 @@ public class ClimbArms extends SubsystemBase {
 
         //Pivot Motor
         mPivoter       = setupClimbFalcon(Constants.mPivoter,       false, pivotPID);
+
+        //Brakes
+        brakeL = new Servo(Constants.servoLeft);
+        brakeR = new Servo(Constants.servoRight);
+        brakeL.setAngle(Constants.sLeftStart); //115
+        brakeR.setAngle(Constants.sRightStart);  //60
 
         /* TalonFX Position Closed Loop Example
 
@@ -118,6 +129,11 @@ public class ClimbArms extends SubsystemBase {
     }
     public double getPivotPos() {
         return mPivoter.getSelectedSensorPosition();
+    }
+
+    public void setBrake(double angleL, double angleR) {
+        brakeL.setAngle(angleL);
+        brakeR.setAngle(angleR);
     }
 
     public void setPivotSolenoids(boolean on) {
