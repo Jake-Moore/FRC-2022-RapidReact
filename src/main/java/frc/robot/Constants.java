@@ -7,6 +7,12 @@ public class Constants {
     public static final int sJoyID = 1;
 
     //Motors
+    public static final int rightDriveAID = 1;
+    public static final int rightDriveBID = 2;
+    public static final int leftDriveAID = 3;
+    public static final int leftDriveBID = 4;
+
+
     public static final int mLeftStraight = 6;
     public static final int mLeftPivot = 5;
     public static final int mRightPivot = 7;

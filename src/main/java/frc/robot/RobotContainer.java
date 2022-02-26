@@ -5,15 +5,18 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.ClimbArms;
+import frc.robot.subsystems.Drivetrain;
 
 @SuppressWarnings("unused")
 public class RobotContainer {
     //Subsystems
     private final ClimbArms climbArms = new ClimbArms();
+    private final Drivetrain drivetrain = new Drivetrain();
 
     //Joysticks
     private final Joystick pJoy = new Joystick(Constants.pJoyID);
@@ -32,7 +35,7 @@ public class RobotContainer {
     private final JoystickButton joyBShare    = new JoystickButton(pJoy, 9); //Share Button
     private final JoystickButton joyBOptions  = new JoystickButton(pJoy, 10);//Options Button
 
-    private final JoystickButton joyBPS       = new JoystickButton(pJoy, 13);//Play Station Button
+    private final JoystickButton joyBPS       = new JoystickButton(pJoy, 13);//PlayStation Button
     private final JoystickButton joyBBig      = new JoystickButton(pJoy, 14);//Big (Center) Button
 
     private final POVButton joyPOVN = new POVButton(pJoy, 0);   //North
@@ -51,19 +54,10 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        //joyBBR.whileHeld(new RunStraightArms(climbArms, .2));
-        //joyBTR.whileHeld(new RunStraightArms(climbArms, -.2));
-
-        //joyBBL.whileHeld(new ParallelDeadlineGroup(
-        //        new RunPivotArms(climbArms, .5)
-        //));
-        //joyBTL.whileHeld(new ParallelDeadlineGroup(
-        //        new RunPivotArms(climbArms, -.5)
-        //));
-
-        //joyBSquare.whileHeld(new RunArmPivot(climbArms, .2));
-        //joyBCircle.whileHeld(new RunArmPivot(climbArms, -.2));
-
+        //Drivetrain
+        drivetrain.setDefaultCommand(new RunCommand(() ->
+                drivetrain.setPercentOutput(powAxis(pJoy.getRawAxis(1), 7D/3D) * 0.65D, pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
+        ));
 
         joyBTL.whileHeld(new RunStraightRopePosAdj(climbArms, 10000));
         joyBBL.whileHeld(new RunPivotPos(climbArms, 7000));
@@ -72,25 +66,6 @@ public class RobotContainer {
                 new RunPivotRopePos(climbArms, 240000)
         )));
         joyBBig.whileHeld(new RunPivotPosAdj(climbArms, -1000));
-        /*
-        joyBOptions.whileHeld(new ParallelCommandGroup(
-                new RunStraightRopePos(climbArms, 100000),
-                new RunPivotRopePos(climbArms,
-                        0),
-                new RunPivotPos(climbArms, 7000)
-        ));
-        joyBBR.whenPressed(new ParallelCommandGroup(
-                new RunPivotRopePos(climbArms, 50000),
-                new RunStraightRopePos(climbArms, 0)
-        ).andThen(new RunPivotPos(climbArms, -13000/3D)));
-
-        joyBTR.whileHeld(new ParallelCommandGroup(
-                new RunBrake(climbArms, 115, 60),
-                new RunStraightRopePos(climbArms, 100000),
-                new RunPivotRopePos(climbArms, 0)
-        ));
-        joyBTriangle.whileHeld(new RunPivotPos(climbArms, 3250).andThen(new RunStraightRopePos(climbArms, 0)).andThen(new RunPivotPos(climbArms, 0)));
-         */
 
         joyBOptions.whenPressed(
             new ParallelCommandGroup(
@@ -126,41 +101,11 @@ public class RobotContainer {
             ).andThen(new RunStraightRopePos(climbArms, 6000))
         );
 
-
         joyBPS.whileHeld(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 0),
                 new RunPivotRopePos(climbArms, 0),
                 new RunPivotPos(climbArms, 0)
         ));
-
-
-
-
-        //Straight arms controls
-        //joyBTriangle.whileHeld(new RunStraightRopePos(climbArms, 230000));
-        //joyBX.whileHeld(new RunStraightRopePos(climbArms, 0));
-        //joyBBR.whileHeld(new RunStraightRopePosAdj(climbArms, 5000));
-        //joyBTR.whileHeld(new RunStraightRopePosAdj(climbArms, -5000));
-
-        //Pivot Arms Controls
-        //joyPOVN.whileHeld(new RunPivotRopePos(climbArms, 287000));
-        //joyPOVS.whileHeld(new RunPivotRopePos(climbArms, 0));
-        //joyBBL.whileHeld(new RunPivotRopePosAdj(climbArms, 5000));
-        //joyBTL.whileHeld(new RunPivotRopePosAdj(climbArms, -5000));
-
-        //mPivoter controls
-        //joyBCircle.whileHeld(new RunPivotPos(climbArms, 13000));
-        //joyBSquare.whileHeld(new RunPivotPos(climbArms, -24500));
-        //joyBOptions.whileHeld(new RunPivotPos(climbArms, 0));
-        //joyPOVE.whileHeld(new RunPivotPosAdj(climbArms, 1000));
-        //joyPOVW.whileHeld(new RunPivotPosAdj(climbArms, -1000));
-
-        //joyBBR.whileHeld(new ParallelDeadlineGroup(
-        //        new RunStraightArms(climbArms, .5)
-        //));
-        //joyBTR.whileHeld(new ParallelDeadlineGroup(
-        //        new RunStraightArms(climbArms, -.5)
-        //));
     }
 
     public void updateSmartDashboard() {
@@ -170,6 +115,14 @@ public class RobotContainer {
         SmartDashboard.putNumber("RightPivotPos",    climbArms.mRightPivot.getSelectedSensorPosition());
 
         SmartDashboard.putNumber("PivoterPos",       climbArms.mPivoter.getSelectedSensorPosition());
+    }
+
+    public double powAxis(double a, double b) {
+        if (a >= 0) {
+            return Math.pow(a, b);
+        }else {
+            return -Math.pow(-a, b);
+        }
     }
 
     public void whenDisabled() {}

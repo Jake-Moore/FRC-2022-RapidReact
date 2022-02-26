@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.PID;
 
 @SuppressWarnings("ununsed")
 public class ClimbArms extends SubsystemBase {
@@ -105,16 +106,6 @@ public class ClimbArms extends SubsystemBase {
         return Math.min(mLeftStraight.getSelectedSensorPosition(), mRightStraight.getSelectedSensorPosition());
     }
 
-    public void setStraightSolenoids(boolean on) {
-        //LeftStraight.set(on);
-        //sRightStraight.set(on);
-        //if (on) {
-        //    sRightStraight.setAngle(0);
-        //}else {
-        //    sRightStraight.setAngle(180);
-        //}
-    }
-
     public void setPivotArmsPos(double pos) {
         mLeftPivot.set(TalonFXControlMode.Position, pos);
         mRightPivot.set(TalonFXControlMode.Position, pos);
@@ -134,32 +125,5 @@ public class ClimbArms extends SubsystemBase {
     public void setBrake(double angleL, double angleR) {
         brakeL.setAngle(angleL);
         brakeR.setAngle(angleR);
-    }
-
-    public void setPivotSolenoids(boolean on) {
-        //sLeftPivot.set(on);
-        //sRightPivot.set(on);
-    }
-
-    public void setPivotPivot(double power) {
-        mPivoter.set(TalonFXControlMode.PercentOutput, power);
-    }
-
-
-    private static class PID {
-        public final double kP;
-        public final double kI;
-        public final double kD;
-        public final double kF;
-        public final double allowedError;
-        public final double maxPower;
-        public PID(double kP, double kI, double kD, double kF, double allowedError, double maxPower) {
-            this.kP = kP;
-            this.kI = kI;
-            this.kD = kD;
-            this.kF = kF;
-            this.allowedError = allowedError;
-            this.maxPower = maxPower;
-        }
     }
 }
