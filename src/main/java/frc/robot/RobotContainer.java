@@ -62,6 +62,9 @@ public class RobotContainer {
                 drivetrain.setPercentOutput(powAxis(pJoy.getRawAxis(1), 7D/3D) * 0.65D, pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
         ));
 
+
+
+        //-----START CLIMB COMMANDS-----//
         joyBShare.whileHeld(new RequireButton(new RunStraightRopePosAdj(climbArms, 10000), joyBPS));
         joyBBig.whileHeld(new RequireButton(new RunPivotPos(climbArms, 7000), joyBPS));
         joyBOptions.whileHeld(new RequireButton(new RunBrake(climbArms, Constants.sLeftStart, Constants.sRightStart).andThen(new ParallelCommandGroup(
@@ -103,15 +106,22 @@ public class RobotContainer {
             ).andThen(new RunPivotPos(climbArms, -13000/3D)
             ).andThen(new RunStraightRopePos(climbArms, 6000))
         , joyBPS));
+        //-----END CLIMB COMMANDS-----//
 
-        joyBTL.whileHeld(new RunShooterRollers(shooter, 20480));
-        joyBBL.whileHeld(new RunShooterRollers(shooter, -20480));
+
+
+        //joyBTL.whileHeld(new RunShooterWheelsAdj(shooter, 512));
+        //joyBBL.whileHeld(new RunShooterWheelsAdj(shooter, -512));
+        joyBTL.whileHeld(new RunShooterRollers(shooter, 10240));
+        joyBBL.whileHeld(new RunShooterRollers(shooter, -10240));
 
         joyBTR.whileHeld(new RunShooterWheels(shooter, 10240));
         joyBBR.whileHeld(new RunShooterWheels(shooter, -10240));
 
         joyPOVN.whenPressed(new RunShooterPivot(shooter, -15000));
         joyPOVS.whenPressed(new RunShooterPivot(shooter, -58000));
+
+        joyPOVW.whenPressed(new RunShooterRollers(shooter, 0));
     }
 
     public void updateSmartDashboard() {
@@ -127,6 +137,13 @@ public class RobotContainer {
         SmartDashboard.putNumber("ShooterPivotAbsPos", shooter.getPivotAbsolutePos());
 
         SmartDashboard.putNumber("Gyro (Rotation)", drivetrain.getGyroRot());
+
+        double[] wheelSpeeds = shooter.getWheelSpeeds();
+        double targetWheelSpeed = shooter.getTargetWheelSpeed();
+        SmartDashboard.putNumber("Left Wheel Speed", wheelSpeeds[0]);
+        SmartDashboard.putNumber("Right Wheel Speed", wheelSpeeds[1]);
+        SmartDashboard.putNumber("Target Wheel Speed", targetWheelSpeed);
+        SmartDashboard.putBoolean("Wheels At Speed", Math.abs(wheelSpeeds[0] - targetWheelSpeed) <= 128 && Math.abs(wheelSpeeds[1] - targetWheelSpeed) <= 128);
     }
 
     public double powAxis(double a, double b) {

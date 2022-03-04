@@ -12,10 +12,10 @@ import frc.robot.util.PID;
 @SuppressWarnings("unused")
 public class Shooter extends SubsystemBase {
     //Motors
-    private final WPI_TalonFX mRollerA;
-    private final WPI_TalonFX mRollerB;
-    private final WPI_TalonFX mWheelsA;
-    private final WPI_TalonFX mWheelsB;
+    private final WPI_TalonFX mRollerT; //Top Roller
+    private final WPI_TalonFX mRollerB; //Bottom Roller
+    private final WPI_TalonFX mWheelsL; //Left Wheel
+    private final WPI_TalonFX mWheelsR; //Right Wheel
     public final WPI_TalonFX mPivoter;
 
     //Pivot Encoder
@@ -26,12 +26,12 @@ public class Shooter extends SubsystemBase {
     private final PID velocityPID = new PID(Constants.SHOOTER_VEL_P, Constants.SHOOTER_VEL_I, Constants.SHOOTER_VEL_D, Constants.SHOOTER_VEL_F, 0, 1);
 
     public Shooter() {
-        mRollerA = setupShooterFalcon(Constants.rollerAID, false, velocityPID);
+        mRollerT = setupShooterFalcon(Constants.rollerAID, false, velocityPID);
         mRollerB = setupShooterFalcon(Constants.rollerBID, true, velocityPID);
-        mRollerB.follow(mRollerA);
-        mWheelsA = setupShooterFalcon(Constants.wheelsAID, false, velocityPID);
-        mWheelsB = setupShooterFalcon(Constants.wheelsBID, true, velocityPID);
-        mWheelsB.follow(mWheelsA);
+        mRollerB.follow(mRollerT);
+        mWheelsL = setupShooterFalcon(Constants.wheelsAID, false, velocityPID);
+        mWheelsR = setupShooterFalcon(Constants.wheelsBID, true, velocityPID);
+        mWheelsR.follow(mWheelsL);
         mPivoter = setupShooterFalcon(Constants.shooterPivotID, false, pivotPID);
 
         //Pivot Encoder
@@ -66,28 +66,36 @@ public class Shooter extends SubsystemBase {
 
     //Sets the speed (velocity) of the shooter rollers in ticks per 100ms
     // Ex: vel = 204.8 will be 0.1 revolution per 100ms or 10 revolutions per second
+    private double targetWheelSpeed = 0;
     public void setWheelSpeed(double vel) {
         if (vel == 0D) {
-            mWheelsA.config_kP(Constants.PID_LOOP_IDX, 0);
-            mWheelsB.config_kP(Constants.PID_LOOP_IDX, 0);
+            mWheelsL.config_kP(Constants.PID_LOOP_IDX, 0);
+            mWheelsR.config_kP(Constants.PID_LOOP_IDX, 0);
         }else {
-            mWheelsA.config_kP(Constants.PID_LOOP_IDX, velocityPID.kP);
-            mWheelsB.config_kP(Constants.PID_LOOP_IDX, velocityPID.kP);
+            mWheelsL.config_kP(Constants.PID_LOOP_IDX, velocityPID.kP);
+            mWheelsR.config_kP(Constants.PID_LOOP_IDX, velocityPID.kP);
         }
-        mWheelsA.set(TalonFXControlMode.Velocity, vel);
+        targetWheelSpeed = vel;
+        mWheelsL.set(TalonFXControlMode.Velocity, vel);
+    }
+    public double getTargetWheelSpeed() {
+        return targetWheelSpeed;
+    }
+    public double[] getWheelSpeeds() {
+        return new double[]{mWheelsL.getSelectedSensorVelocity(), mWheelsR.getSelectedSensorVelocity()};
     }
 
     //Sets the speed (velocity) of the shooter rollers in ticks per 100ms
     // Ex: vel = 204.8 will be 0.1 revolution per 100ms or 10 revolutions per second
     public void setRollerSpeed(double vel) {
         if (vel == 0D) {
-            mRollerA.config_kP(Constants.PID_LOOP_IDX, 0);
+            mRollerT.config_kP(Constants.PID_LOOP_IDX, 0);
             mRollerB.config_kP(Constants.PID_LOOP_IDX, 0);
         }else {
-            mRollerA.config_kP(Constants.PID_LOOP_IDX, velocityPID.kP);
+            mRollerT.config_kP(Constants.PID_LOOP_IDX, velocityPID.kP);
             mRollerB.config_kP(Constants.PID_LOOP_IDX, velocityPID.kP);
         }
-        mRollerA.set(TalonFXControlMode.Velocity, vel);
+        mRollerT.set(TalonFXControlMode.Velocity, vel);
     }
 
     public void setPivot(double pos) {
