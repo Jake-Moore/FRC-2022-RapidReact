@@ -12,12 +12,18 @@ public class Constants {
     public static final int leftDriveAID = 3;
     public static final int leftDriveBID = 4;
 
+    public static final int shooterPivotID = 10;
+    public static final int wheelsAID = 11;
+    public static final int wheelsBID = 12;
+    public static final int rollerAID = 13;
+    public static final int rollerBID = 14;
 
-    public static final int mLeftStraight = 6;
-    public static final int mLeftPivot = 5;
-    public static final int mRightPivot = 7;
-    public static final int mRightStraight = 8;
-    public static final int mPivoter = 9;
+
+    public static final int climbLeftStraightID = 6;
+    public static final int climbLeftPivotID = 5;
+    public static final int climbRightPivotID = 7;
+    public static final int climbRightStraightID = 8;
+    public static final int climbPivotID = 9;
 
     //Servos
     public static final int servoLeft = 0;
@@ -34,10 +40,19 @@ public class Constants {
     public static final double ROPE_I = 0.0;
     public static final double ROPE_D = 0.0;
     public static final double ROPE_F = 0.0;
-    //Pivot Motor PID
-    public static final double PIVOT_P = 0.15;
-    public static final double PIVOT_I = 0.0;
-    public static final double PIVOT_D = 0.0;
-    public static final double PIVOT_F = 0.0;
-
+    //Climb Pivot Motor PID
+    public static final double CLIMB_PIVOT_P = 0.15;
+    public static final double CLIMB_PIVOT_I = 0.0;
+    public static final double CLIMB_PIVOT_D = 0.0;
+    public static final double CLIMB_PIVOT_F = 0.0;
+    //Shooter Pivot Motor PID
+    public static final double SHOOTER_PIVOT_P = 0.15;
+    public static final double SHOOTER_PIVOT_I = 0.0;
+    public static final double SHOOTER_PIVOT_D = 0.0;
+    public static final double SHOOTER_PIVOT_F = 0.0;
+    //Shooter Velocity Based Motors PID
+    public static final double SHOOTER_VEL_P = 0.15;
+    public static final double SHOOTER_VEL_I = 0.0;
+    public static final double SHOOTER_VEL_D = 0.0;
+    public static final double SHOOTER_VEL_F = 0.0;
 }

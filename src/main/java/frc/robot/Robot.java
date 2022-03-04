@@ -80,6 +80,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     CommandScheduler.getInstance().cancelAll();
+    kRobotContainer.init();
   }
 
   /** This function is called periodically during operator control. */

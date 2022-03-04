@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -16,14 +17,10 @@ public class ClimbArms extends SubsystemBase {
     public final WPI_TalonFX mLeftPivot;
     public final WPI_TalonFX mRightStraight;
     public final WPI_TalonFX mRightPivot;
-    //Brake Solenoids
-    //public final Solenoid sLeftStraight;
-    //public final Solenoid sLeftPivot;
-    //public final Solenoid sRightStraight;
-    //public final Solenoid sRightPivot;
-    //public final Servo sRightStraight;
     //Pivot Motor
     public final WPI_TalonFX mPivoter;
+    //Pivot Encoder
+    public final AnalogInput pivotEncoder = new AnalogInput(0);
 
     //Brake Servos
     public final Servo brakeL;
@@ -31,16 +28,16 @@ public class ClimbArms extends SubsystemBase {
 
     //PID Sets
     public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 512, 0.5);
-    public final PID pivotPID = new PID(Constants.PIVOT_P, Constants.PIVOT_I, Constants.PIVOT_D, Constants.PIVOT_F, 128, 0.1);
+    public final PID pivotPID = new PID(Constants.CLIMB_PIVOT_P, Constants.CLIMB_PIVOT_I, Constants.CLIMB_PIVOT_D, Constants.CLIMB_PIVOT_F, 128, 0.1);
 
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
     public ClimbArms() {
         //Rope Motors
-        mLeftStraight  = setupClimbFalcon(Constants.mLeftStraight,  false, ropePID);
-        mLeftPivot     = setupClimbFalcon(Constants.mLeftPivot,     true, ropePID);
-        mRightStraight = setupClimbFalcon(Constants.mRightStraight, true , ropePID);
-        mRightPivot    = setupClimbFalcon(Constants.mRightPivot,    false , ropePID);
+        mLeftStraight  = setupClimbFalcon(Constants.climbLeftStraightID,  false, ropePID);
+        mLeftPivot     = setupClimbFalcon(Constants.climbLeftPivotID,     true, ropePID);
+        mRightStraight = setupClimbFalcon(Constants.climbRightStraightID, true , ropePID);
+        mRightPivot    = setupClimbFalcon(Constants.climbRightPivotID,    false , ropePID);
 
         //Brake Solenoids
         //sLeftStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
@@ -50,7 +47,9 @@ public class ClimbArms extends SubsystemBase {
         //sRightStraight = new Servo(0);
 
         //Pivot Motor
-        mPivoter       = setupClimbFalcon(Constants.mPivoter,       false, pivotPID);
+        mPivoter       = setupClimbFalcon(Constants.climbPivotID,       false, pivotPID);
+        //Pivot Encoder
+        pivotEncoder.setAverageBits(10); //Not sure if this is critical but it works with it :)
 
         //Brakes
         brakeL = new Servo(Constants.servoLeft);
@@ -110,8 +109,13 @@ public class ClimbArms extends SubsystemBase {
         mLeftPivot.set(TalonFXControlMode.Position, pos);
         mRightPivot.set(TalonFXControlMode.Position, pos);
     }
+    //Returns the internal falcon position for the pivoter
     public double getPivotArmsPos() {
         return Math.min(mLeftPivot.getSelectedSensorPosition(), mRightPivot.getSelectedSensorPosition());
+    }
+    //Returns the angle (to one decimal) of the pivot arm
+    public double getPivotAbsolutePos() {
+        return ((int) Math.round(pivotEncoder.getAverageValue() * 360D/269.4))/10D;
     }
 
 

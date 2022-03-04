@@ -11,12 +11,15 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.ClimbArms;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Shooter;
+import frc.robot.util.RequireButton;
 
 @SuppressWarnings("unused")
 public class RobotContainer {
     //Subsystems
     private final ClimbArms climbArms = new ClimbArms();
     private final Drivetrain drivetrain = new Drivetrain();
+    private final Shooter shooter = new Shooter();
 
     //Joysticks
     private final Joystick pJoy = new Joystick(Constants.pJoyID);
@@ -59,15 +62,15 @@ public class RobotContainer {
                 drivetrain.setPercentOutput(powAxis(pJoy.getRawAxis(1), 7D/3D) * 0.65D, pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
         ));
 
-        joyBTL.whileHeld(new RunStraightRopePosAdj(climbArms, 10000));
-        joyBBL.whileHeld(new RunPivotPos(climbArms, 7000));
-        joyBShare.whileHeld(new RunBrake(climbArms, Constants.sLeftStart, Constants.sRightStart).andThen(new ParallelCommandGroup(
+        joyBShare.whileHeld(new RequireButton(new RunStraightRopePosAdj(climbArms, 10000), joyBPS));
+        joyBBig.whileHeld(new RequireButton(new RunPivotPos(climbArms, 7000), joyBPS));
+        joyBOptions.whileHeld(new RequireButton(new RunBrake(climbArms, Constants.sLeftStart, Constants.sRightStart).andThen(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 0),
                 new RunPivotRopePos(climbArms, 240000)
-        )));
-        joyBBig.whileHeld(new RunPivotPosAdj(climbArms, -1000));
+        )), joyBPS));
+        joyBTriangle.whileHeld(new RequireButton(new RunPivotPosAdj(climbArms, -1000), joyBPS));
 
-        joyBOptions.whenPressed(
+        joyBCircle.whenPressed(new RequireButton(
             new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 100000),
                 new RunPivotRopePos(climbArms, 0),
@@ -83,38 +86,47 @@ public class RobotContainer {
             )).andThen(new RunPivotPos(climbArms, 3250)
             ).andThen(new RunStraightRopePos(climbArms, 0)
             ).andThen(new RunPivotPos(climbArms, 0))
-        );
-        joyBBR.whenPressed(new RunBrake(climbArms, Constants.sLeftStart, Constants.sRightStart).andThen(
+        , joyBPS));
+        joyBX.whenPressed(new RequireButton(new RunBrake(climbArms, Constants.sLeftStart, Constants.sRightStart).andThen(
             new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 0),
                 new RunPivotRopePos(climbArms, 120000)
             ).andThen(new RunPivotPos(climbArms, 3500)
             ).andThen(new RunPivotRopePos(climbArms, 240000)
             ).andThen(new RunPivotPos(climbArms, 7000))
-        ));
-        joyBTR.whenPressed(new ParallelCommandGroup(
+        ), joyBPS));
+        joyBSquare.whenPressed(new RequireButton(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 100000),
                 new RunBrake(climbArms, 115, 60),
                 new RunPivotRopePos(climbArms, 0),
                 new RunPivotPos(climbArms, 7000)
             ).andThen(new RunPivotPos(climbArms, -13000/3D)
             ).andThen(new RunStraightRopePos(climbArms, 6000))
-        );
+        , joyBPS));
 
-        joyBPS.whileHeld(new ParallelCommandGroup(
-                new RunStraightRopePos(climbArms, 0),
-                new RunPivotRopePos(climbArms, 0),
-                new RunPivotPos(climbArms, 0)
-        ));
+        joyBTL.whileHeld(new RunShooterRollers(shooter, 20480));
+        joyBBL.whileHeld(new RunShooterRollers(shooter, -20480));
+
+        joyBTR.whileHeld(new RunShooterWheels(shooter, 10240));
+        joyBBR.whileHeld(new RunShooterWheels(shooter, -10240));
+
+        joyPOVN.whenPressed(new RunShooterPivot(shooter, -15000));
+        joyPOVS.whenPressed(new RunShooterPivot(shooter, -58000));
     }
 
     public void updateSmartDashboard() {
-        SmartDashboard.putNumber("LeftStraightPos",  climbArms.mLeftStraight.getSelectedSensorPosition());
-        SmartDashboard.putNumber("LeftPivotPos",     climbArms.mLeftPivot.getSelectedSensorPosition());
+        SmartDashboard.putNumber("LeftStraightPos", climbArms.mLeftStraight.getSelectedSensorPosition());
+        SmartDashboard.putNumber("LeftPivotPos", climbArms.mLeftPivot.getSelectedSensorPosition());
         SmartDashboard.putNumber("RightStraightPos", climbArms.mRightStraight.getSelectedSensorPosition());
-        SmartDashboard.putNumber("RightPivotPos",    climbArms.mRightPivot.getSelectedSensorPosition());
+        SmartDashboard.putNumber("RightPivotPos", climbArms.mRightPivot.getSelectedSensorPosition());
 
-        SmartDashboard.putNumber("PivoterPos",       climbArms.mPivoter.getSelectedSensorPosition());
+        SmartDashboard.putNumber("ClimbPivoterPos", climbArms.mPivoter.getSelectedSensorPosition());
+        SmartDashboard.putNumber("ClimbPivotAbsPos", climbArms.getPivotAbsolutePos());
+
+        SmartDashboard.putNumber("ShooterPivoterPos", shooter.mPivoter.getSelectedSensorPosition());
+        SmartDashboard.putNumber("ShooterPivotAbsPos", shooter.getPivotAbsolutePos());
+
+        SmartDashboard.putNumber("Gyro (Rotation)", drivetrain.getGyroRot());
     }
 
     public double powAxis(double a, double b) {
@@ -123,6 +135,10 @@ public class RobotContainer {
         }else {
             return -Math.pow(-a, b);
         }
+    }
+
+    public void init() {
+        climbArms.setPivotPos(0);
     }
 
     public void whenDisabled() {}

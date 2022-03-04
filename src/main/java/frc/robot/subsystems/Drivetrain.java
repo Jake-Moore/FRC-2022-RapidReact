@@ -45,12 +45,14 @@ public class Drivetrain extends SubsystemBase {
 
         mLeftB.follow(mLeftA);
         mRightB.follow(mRightA);
+
+        zeroGyro();
     }
 
     //Drive Modes
     public void setPercentOutput(double zoom, double nyoom) {
-        mLeftA.set(ControlMode.PercentOutput, -nyoom - zoom);
-        mRightA.set(ControlMode.PercentOutput, nyoom - zoom);
+        mLeftA.set(ControlMode.PercentOutput, nyoom - zoom);
+        mRightA.set(ControlMode.PercentOutput, -nyoom - zoom);
     }
 
     public double[] getDrivePos() {
@@ -70,7 +72,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     //Gyroscope
-    public double getGyro() {
+    public double getGyroRot() {
         return -gyro.getAngle();
     }
 
