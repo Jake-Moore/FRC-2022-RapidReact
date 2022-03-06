@@ -41,18 +41,18 @@ public class Constants {
     public static final double ROPE_D = 0.0;
     public static final double ROPE_F = 0.0;
     //Climb Pivot Motor PID
-    public static final double CLIMB_PIVOT_P = 0.15;
+    public static final double CLIMB_PIVOT_P = 0.3;
     public static final double CLIMB_PIVOT_I = 0.0;
     public static final double CLIMB_PIVOT_D = 0.0;
     public static final double CLIMB_PIVOT_F = 0.0;
     //Shooter Pivot Motor PID
-    public static final double SHOOTER_PIVOT_P = 0.15;
+    public static final double SHOOTER_PIVOT_P = 0.3;
     public static final double SHOOTER_PIVOT_I = 0.0;
     public static final double SHOOTER_PIVOT_D = 0.0;
     public static final double SHOOTER_PIVOT_F = 0.0;
     //Shooter Velocity Based Motors PID
-    public static final double SHOOTER_VEL_P = 0.15;
+    public static final double SHOOTER_VEL_P = 0.4;
     public static final double SHOOTER_VEL_I = 0.0;
-    public static final double SHOOTER_VEL_D = 0.0;
-    public static final double SHOOTER_VEL_F = 0.0;
+    public static final double SHOOTER_VEL_D = 0.05;
+    public static final double SHOOTER_VEL_F = 0.05;
 }

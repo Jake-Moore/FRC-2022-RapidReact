@@ -5,10 +5,10 @@ import frc.robot.subsystems.Shooter;
 
 public class RunShooterRollers extends CommandBase {
     private final Shooter shooter;
-    private final double vel;
-    public RunShooterRollers(Shooter shooter, double vel) {
+    private final double power;
+    public RunShooterRollers(Shooter shooter, double power) {
         this.shooter = shooter;
-        this.vel = vel;
+        this.power = power;
     }
 
     @Override
@@ -16,12 +16,12 @@ public class RunShooterRollers extends CommandBase {
 
     @Override
     public void execute() {
-        shooter.setRollerSpeed(vel);
+        shooter.setRollerPower(power);
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setRollerSpeed(0);
+        shooter.setRollerPower(0);
     }
 
     @Override
