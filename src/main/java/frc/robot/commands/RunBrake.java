@@ -28,6 +28,6 @@ public class RunBrake extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (Instant.now().toEpochMilli() - start >= 500D);
+        return true;
     }
 }
