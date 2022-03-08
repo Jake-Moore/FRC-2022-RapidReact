@@ -13,6 +13,7 @@ import frc.robot.subsystems.ClimbArms;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
+import frc.robot.util.AutoPaths;
 import frc.robot.util.RequireButton;
 
 @SuppressWarnings("unused")
@@ -22,6 +23,8 @@ public class RobotContainer {
     private final Drivetrain drivetrain = new Drivetrain();
     private final Shooter shooter = new Shooter();
     private final Limelight limelight = new Limelight();
+
+    public AutoPaths ap = new AutoPaths(climbArms, drivetrain, shooter, limelight);
 
     //Joysticks
     private final Joystick pJoy = new Joystick(Constants.pJoyID);

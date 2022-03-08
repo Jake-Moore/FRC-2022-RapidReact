@@ -10,9 +10,9 @@ import frc.robot.Constants;
 
 @SuppressWarnings("unused")
 public class Drivetrain extends SubsystemBase {
-    public final TalonFX mLeftA = new TalonFX(Constants.leftDriveAID);
+    private final TalonFX mLeftA = new TalonFX(Constants.leftDriveAID);
     private final TalonFX mLeftB = new TalonFX(Constants.leftDriveBID);
-    public final TalonFX mRightA = new TalonFX(Constants.rightDriveAID);
+    private final TalonFX mRightA = new TalonFX(Constants.rightDriveAID);
     private final TalonFX mRightB = new TalonFX(Constants.rightDriveBID);
 
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
@@ -119,5 +119,10 @@ public class Drivetrain extends SubsystemBase {
         double sectorLength = (wheelSeparation/2D) * Math.toRadians(deltaAngle); //+Distance to travel
         double rotations = sectorLength/wheelCirc;
         return rotations*gearRatio*2048;
+    }
+
+    public void setDeltaPositions(double deltaLeft, double deltaRight) {
+        mLeftA.set(ControlMode.Position, mLeftA.getSelectedSensorPosition() + deltaLeft);
+        mRightA.set(ControlMode.Position, mRightA.getSelectedSensorPosition() + deltaRight);
     }
 }

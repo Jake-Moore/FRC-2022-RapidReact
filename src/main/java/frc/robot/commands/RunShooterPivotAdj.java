@@ -17,7 +17,7 @@ public class RunShooterPivotAdj extends CommandBase {
 
     @Override
     public void initialize() {
-        shooter.setPivot(Math.min(Math.max(shooter.getPivot()+adj, min), max));
+        shooter.setPivot(Math.min(Math.max(shooter.getPivotTargetPos()+adj, min), max));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -39,7 +38,7 @@ public class Shooter extends SubsystemBase {
         mPivoter = setupShooterFalcon(Constants.shooterPivotID, false, pivotPID);
 
         //Pivot Encoder
-        pivotEncoder.setAverageBits(10); //Not sure if this is critical but it works with it :)
+        pivotEncoder.setAverageBits(10); //Not sure if this is critical, but it works with it :)
 
         //Calibrate the falcon using the abs encoder?
         new Timer().schedule(new TimerTask() {
@@ -116,7 +115,7 @@ public class Shooter extends SubsystemBase {
         mPivoter.set(TalonFXControlMode.Position, pos);
         pivot = pos;
     }
-    public double getPivot() {
+    public double getPivotTargetPos() {
         return pivot;
     }
 
@@ -138,6 +137,6 @@ public class Shooter extends SubsystemBase {
 
     public void targetShooter(double angle, double speed) {
         setWheelSpeed(speed);
-        mPivoter.set(ControlMode.Position, angle);
+        setPivot(angle);
     }
 }
