@@ -78,8 +78,6 @@ public class Shooter extends SubsystemBase {
     private double targetWheelSpeed = 0;
     public void setWheelSpeed(double vel) {
         if (vel == 0D) {
-            //mWheelsL.set(ControlMode.PercentOutput, 0);
-            //mWheelsR.set(ControlMode.PercentOutput, 0);
             mWheelsL.config_kP(Constants.PID_LOOP_IDX, 0);
             mWheelsR.config_kP(Constants.PID_LOOP_IDX, 0);
             mWheelsL.config_kI(Constants.PID_LOOP_IDX, 0);

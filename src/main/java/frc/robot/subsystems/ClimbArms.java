@@ -30,7 +30,6 @@ public class ClimbArms extends SubsystemBase {
     public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 64, 0.75);
     public final PID pivotPID = new PID(Constants.CLIMB_PIVOT_P, Constants.CLIMB_PIVOT_I, Constants.CLIMB_PIVOT_D, Constants.CLIMB_PIVOT_F, 128, 0.5);
 
-
     //Create the motors, invert a couple, help hold them in place, and zero encoders
     public ClimbArms() {
         //Rope Motors
@@ -39,17 +38,10 @@ public class ClimbArms extends SubsystemBase {
         mRightStraight = setupClimbFalcon(Constants.climbRightStraightID, true , ropePID);
         mRightPivot    = setupClimbFalcon(Constants.climbRightPivotID,    false , ropePID);
 
-        //Brake Solenoids
-        //sLeftStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 0);
-        //sLeftPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
-        //sRightStraight = new Solenoid(PneumaticsModuleType.CTREPCM, 2);
-        //sRightPivot = new Solenoid(PneumaticsModuleType.CTREPCM, 3);
-        //sRightStraight = new Servo(0);
-
         //Pivot Motor
         mPivoter       = setupClimbFalcon(Constants.climbPivotID,       false, pivotPID);
         //Pivot Encoder
-        pivotEncoder.setAverageBits(10); //Not sure if this is critical but it works with it :)
+        pivotEncoder.setAverageBits(10); //Not sure if this is critical, but it works with it :)
 
         //Brakes
         brakeL = new Servo(Constants.servoLeft);

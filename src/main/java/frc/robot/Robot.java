@@ -29,6 +29,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     kRobotContainer = new RobotContainer();
     kChooser.setDefaultOption("None", null);
+    kChooser.addOption("Taxi + 1 Preload", null);
 
     SmartDashboard.putData(kChooser);
   }
