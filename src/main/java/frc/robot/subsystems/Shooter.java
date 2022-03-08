@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -25,7 +26,7 @@ public class Shooter extends SubsystemBase {
     public final AnalogInput pivotEncoder = new AnalogInput(1);
 
     //PIDs
-    private final PID pivotPID = new PID(Constants.SHOOTER_PIVOT_P, Constants.SHOOTER_PIVOT_I, Constants.SHOOTER_PIVOT_D, Constants.SHOOTER_PIVOT_F, 64, 0.2);
+    private final PID pivotPID = new PID(Constants.SHOOTER_PIVOT_P, Constants.SHOOTER_PIVOT_I, Constants.SHOOTER_PIVOT_D, Constants.SHOOTER_PIVOT_F, 32, 0.2);
     private final PID wheelPID = new PID(Constants.SHOOTER_VEL_P, Constants.SHOOTER_VEL_I, Constants.SHOOTER_VEL_D, Constants.SHOOTER_VEL_F, 0, 1.0);
     private final PID rollerPID = new PID(0, 0, 0 , 0, 0, 1);
 
@@ -112,12 +113,33 @@ public class Shooter extends SubsystemBase {
         mRollerT.set(TalonFXControlMode.PercentOutput, power);
     }
 
+    private double pivot = 0;
     public void setPivot(double pos) {
         mPivoter.set(TalonFXControlMode.Position, pos);
+        pivot = pos;
+    }
+    public double getPivot() {
+        return pivot;
     }
 
     //Returns the angle (to one decimal) of the shooter arm
     public double getPivotAbsolutePos() {
         return ((int) Math.round(pivotEncoder.getAverageValue() * 360D/269.4))/10D;
+    }
+
+    // less than 45 limelight can't find target
+    public double getIdealSpeed(double distance) {
+        if (distance <= 45 || distance >= 250) { return -1; }
+        return (1 + Math.pow(distance/230, 2)*0.11)*(-Math.pow(1.00941, distance+640) - 5793.4);
+    }
+
+    public double getIdealAngle(double distance) {
+        if (distance <= 45 || distance >= 250) { return 401; }
+        return -11533.2 * Math.log10(distance - 30) + 8772.51;
+    }
+
+    public void targetShooter(double angle, double speed) {
+        setWheelSpeed(speed);
+        mPivoter.set(ControlMode.Position, angle);
     }
 }

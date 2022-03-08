@@ -55,4 +55,9 @@ public class Constants {
     public static final double SHOOTER_VEL_I = 0.0;
     public static final double SHOOTER_VEL_D = 0.05;
     public static final double SHOOTER_VEL_F = 0.05;
+    //Drive PID (Position???)
+    public static final double driveP = 0.5;
+    public static final double driveI = 0.0;
+    public static final double driveD = 0.0;
+    public static final double driveF = 0.0;
 }
