@@ -34,9 +34,9 @@ public class AutoPaths {
                 .andThen(new RunLights(limelight, 3, 3)
                 .andThen(new RunTargetShooter(shooter, limelight)
                 .andThen(new ParallelRaceGroup(
-                    new RunTimer(3),
+                    new RunTimer(5),
                     new RunShooterRollers(shooter, 0.75)
-                ))))
+                )).andThen(new RunShooterWheels(shooter, 0))))
             )
         );
     }

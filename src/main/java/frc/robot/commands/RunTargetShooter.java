@@ -30,7 +30,8 @@ public class RunTargetShooter extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         limelight.setLights(1);
-        shooter.setWheelSpeed(0);
+        //shooter.setWheelSpeed(0); //Finished will be called once this is ready, any implementation of this must
+        // run the RunShooterWheels command to stop the wheels
     }
 
     @Override

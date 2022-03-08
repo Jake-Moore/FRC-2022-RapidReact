@@ -138,6 +138,7 @@ public class RobotContainer {
 
         sJoyPOVN.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunCenterOnLimelight(drivetrain, limelight)));
         sJoyY.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight)));
+        sJoyY.whenReleased(new RunShooterWheels(shooter, 0));
     }
 
     public void updateSmartDashboard() {
