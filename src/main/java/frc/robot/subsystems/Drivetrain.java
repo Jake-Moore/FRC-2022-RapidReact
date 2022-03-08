@@ -17,7 +17,7 @@ public class Drivetrain extends SubsystemBase {
 
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
-    public boolean aimbot = false;
+    public boolean overrideDrivetrain = false;
 
     public Drivetrain() {
         //Drivetrain PID
@@ -77,7 +77,7 @@ public class Drivetrain extends SubsystemBase {
 
     //Drive Modes
     public void driveFromJoysticks(double zoom, double nyoom) {
-        if (aimbot) { return; }
+        if (overrideDrivetrain) { return; }
         mLeftA.set(ControlMode.PercentOutput, nyoom - zoom);
         mRightA.set(ControlMode.PercentOutput, -nyoom - zoom);
     }

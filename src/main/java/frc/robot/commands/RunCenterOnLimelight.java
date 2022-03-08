@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
@@ -15,21 +16,25 @@ public class RunCenterOnLimelight extends CommandBase {
 
     @Override
     public void initialize() {
-        drivetrain.aimbot = true;
+        drivetrain.overrideDrivetrain = true;
         limelight.setLights(3);
 
-        Target t = limelight.getTarget();
-        drivetrain.setRotation(drivetrain.getGyroRot() + t.yaw);
-    }
 
-    @Override
-    public void execute() {
+        Target initial = limelight.getTarget();
+        drivetrain.setRotation(drivetrain.getGyroRot() + initial.yaw);
 
+        Notifier aimbotLoop = new Notifier(() -> {
+            if (drivetrain.overrideDrivetrain) {
+                Target periodic = limelight.getTarget();
+                drivetrain.setRotation(drivetrain.getGyroRot() + periodic.yaw);
+            }
+        });
+        aimbotLoop.startPeriodic(1);
     }
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.aimbot = false;
+        drivetrain.overrideDrivetrain = false;
         limelight.setLights(1);
     }
 
