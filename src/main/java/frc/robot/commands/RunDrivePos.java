@@ -5,17 +5,32 @@ import frc.robot.subsystems.Drivetrain;
 
 public class RunDrivePos extends CommandBase {
     private final Drivetrain drivetrain;
-    private final double deltaLeft;
-    private final double deltaRight;
+    private final double left;
+    private final double right;
 
-    public RunDrivePos(Drivetrain drivetrain, double deltaLeft, double deltaRight) {
+    public RunDrivePos(Drivetrain drivetrain, double left, double right) {
         this.drivetrain = drivetrain;
-        this.deltaLeft = deltaLeft;
-        this.deltaRight = deltaRight;
+        this.left = left;
+        this.right = right;
     }
 
     @Override
     public void initialize() {
-        drivetrain.setDeltaPositions(deltaLeft, deltaRight);
+        drivetrain.overrideDrivetrain = true;
+    }
+
+    @Override
+    public void execute() {
+        drivetrain.setDrivePositions(left, right);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.overrideDrivetrain = false;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return Math.abs(drivetrain.getDrivePos()[0] - left) <= 100 && Math.abs(drivetrain.getDrivePos()[1] - right) <= 100;
     }
 }

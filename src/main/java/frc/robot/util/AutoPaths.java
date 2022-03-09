@@ -1,5 +1,6 @@
 package frc.robot.util;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import frc.robot.commands.*;
 import frc.robot.subsystems.ClimbArms;
@@ -24,20 +25,55 @@ public class AutoPaths {
         this.shooter = shooter;
         this.limelight = limelight;
 
-        double inchesBackup = 20; //How many inches to back up in order to achieve a taxi
-        double ticks = inchesBackup/(6*Math.PI) * (25D/3D) * 2048;
         trajs.add(
             new NamedCommand(
                 "Taxi Back + 1 Ball Forward",
 
-                new RunDrivePos(drivetrain, -ticks, -ticks)
+                new RunDrivePos(drivetrain, -getTicksFromDist(20), -getTicksFromDist(20))
+                .andThen(new ParallelRaceGroup(
+                    new RunTimer(1.5),
+                    new RunCenterOnLimelight(drivetrain, limelight)
+                ))
                 .andThen(new RunLights(limelight, 3, 3)
                 .andThen(new RunTargetShooter(shooter, limelight)
                 .andThen(new ParallelRaceGroup(
+                    new RunTimer(2.5),
+                    new RunShooterRollers(shooter, -0.75, 0)
+                )).andThen(new RunShooterWheels(shooter, 0, 0))
+            )))
+        );
+
+        trajs.add(
+            new NamedCommand(
+                "Pickup Forward + 2 Ball + Taxi",
+
+                new ParallelCommandGroup(
+                    new RunShooterPivot(shooter, -55500),
+                    new RunTimer(1.5)
+                ).andThen(new ParallelRaceGroup(
+                    new RunDrivePos(drivetrain, getTicksFromDist(40), getTicksFromDist(40)),
+                    new RunShooterWheels(shooter, 4096, 0),
+                    new RunShooterRollers(shooter, 0.75, 0)
+                ))
+                .andThen(new ParallelRaceGroup(
                     new RunTimer(5),
-                    new RunShooterRollers(shooter, 0.75)
-                )).andThen(new RunShooterWheels(shooter, 0))))
+                    new RunShooterPivot(shooter, -15000),
+                    new RunRotateBot(drivetrain, 180)
+                )).andThen(new ParallelRaceGroup(
+                    new RunTimer(1.5),
+                    new RunCenterOnLimelight(drivetrain, limelight)
+                ))
+                .andThen(new RunLights(limelight, 3, 3))
+                .andThen(new RunTargetShooter(shooter, limelight))
+                .andThen(new ParallelRaceGroup(
+                    new RunTimer(2.5),
+                    new RunShooterRollers(shooter, -0.75, 0)
+                )).andThen(new RunShooterWheels(shooter, 0, 0))
             )
         );
+    }
+
+    private double getTicksFromDist(double inches) {
+        return (inches/(6*Math.PI)) * (25D/3D) * 2048;
     }
 }

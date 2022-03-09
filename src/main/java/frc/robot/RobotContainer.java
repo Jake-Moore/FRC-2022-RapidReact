@@ -30,8 +30,8 @@ public class RobotContainer {
     private final Joystick pJoy = new Joystick(Constants.pJoyID);
     private final Joystick sJoy = new Joystick(Constants.sJoyID);
 
-    //Joystick Buttons
-    private final JoystickButton joyBSquare   = new JoystickButton(pJoy, 1); //Square
+    //Primary Controller Buttons//
+    //private final JoystickButton joyBSquare   = new JoystickButton(pJoy, 1); //Square
     private final JoystickButton joyBX        = new JoystickButton(pJoy, 2); //X
     private final JoystickButton joyBCircle   = new JoystickButton(pJoy, 3); //Circle
     private final JoystickButton joyBTriangle = new JoystickButton(pJoy, 4); //Triangle
@@ -49,8 +49,20 @@ public class RobotContainer {
     private final POVButton joyPOVS = new POVButton(pJoy, 180); //South
     private final POVButton joyPOVW = new POVButton(pJoy, 270); //West
 
+    private final JoystickButton sJoyBA = new JoystickButton(sJoy, 1); //A Button
+    private final JoystickButton sJoyBB = new JoystickButton(sJoy, 2); //B Button
+    private final JoystickButton sJoyBX = new JoystickButton(sJoy, 3); //X Button
+    private final JoystickButton sJoyBY = new JoystickButton(sJoy, 4); //Y Button
+    private final JoystickButton sJoyBBL = new JoystickButton(sJoy, 5); //Left Bumper Button
+    private final JoystickButton sJoyBBR = new JoystickButton(sJoy, 6); //Right Bumper Button
+    private final JoystickButton sJoyBBack = new JoystickButton(sJoy, 7); //Back Button
+    private final JoystickButton sJoyBLS = new JoystickButton(sJoy, 9); //Left Stick Button
+    private final JoystickButton sJoyBRS = new JoystickButton(sJoy, 10); //Right Stick Button
+
+    //TODO write a class to interpret triggers as buttons for Secondary controller
+
     private final POVButton sJoyPOVN = new POVButton(sJoy, 0); //North
-    private final JoystickButton sJoyY = new JoystickButton(sJoy, 4); //Y Button
+    private final POVButton sJoyPOVS = new POVButton(sJoy, 180); //South
 
 
     public RobotContainer() {
@@ -111,34 +123,33 @@ public class RobotContainer {
                 ).andThen(new RunStraightRopePos(climbArms, 5000)
                 ).andThen(new RunShooterPivot(shooter, 8000))
                 , joyBPS));
+        // joyBSquare reserved for additional climb buttons if needed
         //-----END CLIMB-----//
 
-
-        //joyBTL.whileHeld(new RunShooterWheelsAdj(shooter, 512));
-        //joyBBL.whileHeld(new RunShooterWheelsAdj(shooter, -512));
-        joyBTL.whileHeld(new RunShooterRollers(shooter, 0.75));
-        joyBBL.whileHeld(new RunShooterRollers(shooter, -0.75));
-
-        joyBTR.whenPressed(new RunShooterWheelsAdj(shooter, 512, 15360, -15360));
-        joyBBR.whenPressed(new RunShooterWheelsAdj(shooter, -512, 15360, -15360));
-
-        joyPOVN.whenPressed(new RunShooterPivot(shooter, -15000));
-        joyPOVS.whenPressed(new RunShooterPivot(shooter, -55500)); //-58000
-
-        joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen(
-            new ParallelCommandGroup(
-                new RunStraightRopePos(climbArms, 0),
-                new RunPivotRopePos(climbArms, 0)
-            ).andThen(new RunPivotPos(climbArms, 0))
+        //Primary Controller Buttons//
+        joyBLeftJoystick.whileHeld(new RunLights(limelight, 3, 1)); //Lights
+        joyBTL.whileHeld(new RunShooterWheels(shooter, 4096, 0)); //Intake Wheels
+        joyBBL.whileHeld(new RunShooterRollers(shooter, 0.75, 0)); //Intake Belts
+        joyBTR.whenPressed(new RunShooterPivot(shooter, -55500)); //Set Pivot to intake
+        joyBBR.whenPressed(new RunShooterPivot(shooter, 0)); //Set Pivot to stow
+        joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh Shit Button
+                new ParallelCommandGroup(
+                        new RunStraightRopePos(climbArms, 0),
+                        new RunPivotRopePos(climbArms, 0)
+                ).andThen(new RunPivotPos(climbArms, 0))
         ), joyBPS));
 
 
-        joyBLeftJoystick.whileHeld(new RunLights(limelight, 3, 1));
+        //Secondary Controller Buttons//
+        sJoyBLS.whenPressed(new RunLights(limelight, 3, 1));
 
 
+        //TODO write Secondary controller button code
+
+        //Old and will be removed when ^
         sJoyPOVN.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunCenterOnLimelight(drivetrain, limelight)));
-        sJoyY.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight)));
-        sJoyY.whenReleased(new RunShooterWheels(shooter, 0));
+        sJoyBY.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight)));
+        sJoyBY.whenReleased(new RunShooterWheels(shooter, 0, 0));
     }
 
     public void updateSmartDashboard() {
@@ -167,6 +178,9 @@ public class RobotContainer {
 
         SmartDashboard.putNumber("IdealSpeed", shooter.getIdealSpeed(limelight.getDistance()));
         SmartDashboard.putNumber("IdealAngle", shooter.getIdealAngle(limelight.getDistance()));
+
+        SmartDashboard.putNumber("mLeftA", drivetrain.getDrivePos()[0]);
+        SmartDashboard.putNumber("mRightA", drivetrain.getDrivePos()[1]);
     }
 
     public double powAxis(double a, double b) {

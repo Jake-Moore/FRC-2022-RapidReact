@@ -81,6 +81,7 @@ public class Robot extends TimedRobot {
         if (command != null) {
             command.getCommand().schedule();
         }
+        kRobotContainer.init();
     }
 
     /** This function is called periodically during autonomous. */

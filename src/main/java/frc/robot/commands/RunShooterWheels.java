@@ -5,10 +5,12 @@ import frc.robot.subsystems.Shooter;
 
 public class RunShooterWheels extends CommandBase {
     private final Shooter shooter;
-    private final double vel;
-    public RunShooterWheels(Shooter shooter, double vel) {
+    private final double start;
+    private final double end;
+    public RunShooterWheels(Shooter shooter, double start, double end) {
         this.shooter = shooter;
-        this.vel = vel;
+        this.start = start;
+        this.end = end;
     }
 
     @Override
@@ -16,12 +18,12 @@ public class RunShooterWheels extends CommandBase {
 
     @Override
     public void execute() {
-        shooter.setWheelSpeed(vel);
+        shooter.setWheelSpeed(start);
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.setWheelSpeed(0);
+        shooter.setWheelSpeed(end);
     }
 
     @Override

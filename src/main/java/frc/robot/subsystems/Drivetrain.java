@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
@@ -26,15 +27,22 @@ public class Drivetrain extends SubsystemBase {
         mLeftA.config_kI(driveID, Constants.driveI);
         mLeftA.config_kD(driveID, Constants.driveD);
         mLeftA.config_kF(driveID, Constants.driveF);
+        mLeftA.configPeakOutputForward(Constants.driveMaxPower); mLeftA.configPeakOutputReverse(-Constants.driveMaxPower);
+        mLeftA.setSelectedSensorPosition(0);
         mRightA.config_kP(driveID, Constants.driveP);
         mRightA.config_kI(driveID, Constants.driveI);
         mRightA.config_kD(driveID, Constants.driveD);
         mRightA.config_kF(driveID, Constants.driveF);
+        mRightA.configPeakOutputForward(Constants.driveMaxPower); mRightA.configPeakOutputReverse(-Constants.driveMaxPower);
+        mRightA.setSelectedSensorPosition(0);
 
         mLeftA.setNeutralMode(NeutralMode.Coast);
+        mLeftA.setSelectedSensorPosition(0);
         mLeftB.setNeutralMode(NeutralMode.Coast);
+        mLeftB.setSelectedSensorPosition(0);
         mRightA.setNeutralMode(NeutralMode.Coast);
         mRightB.setNeutralMode(NeutralMode.Coast);
+        mLeftB.setSelectedSensorPosition(0);
 
         mLeftA.setInverted(true);
         mLeftB.setInverted(true);
@@ -121,8 +129,8 @@ public class Drivetrain extends SubsystemBase {
         return rotations*gearRatio*2048;
     }
 
-    public void setDeltaPositions(double deltaLeft, double deltaRight) {
-        mLeftA.set(ControlMode.Position, mLeftA.getSelectedSensorPosition() + deltaLeft);
-        mRightA.set(ControlMode.Position, mRightA.getSelectedSensorPosition() + deltaRight);
+    public void setDrivePositions(double left, double right) {
+        mLeftA.set(ControlMode.Position, left);
+        mRightA.set(ControlMode.Position, right);
     }
 }
