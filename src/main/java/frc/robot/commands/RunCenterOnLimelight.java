@@ -9,9 +9,15 @@ import frc.robot.util.Target;
 public class RunCenterOnLimelight extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
+    private final Notifier aimbotLoop;
     public RunCenterOnLimelight(Drivetrain drivetrain, Limelight limelight) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
+
+        aimbotLoop = new Notifier(() -> {
+            Target periodic = limelight.getTarget();
+            drivetrain.setRotation(drivetrain.getGyroRot() + periodic.yaw);
+        });
     }
 
     @Override
@@ -19,16 +25,9 @@ public class RunCenterOnLimelight extends CommandBase {
         drivetrain.overrideDrivetrain = true;
         limelight.setLights(3);
 
-
         Target initial = limelight.getTarget();
         drivetrain.setRotation(drivetrain.getGyroRot() + initial.yaw);
 
-        Notifier aimbotLoop = new Notifier(() -> {
-            if (drivetrain.overrideDrivetrain) {
-                Target periodic = limelight.getTarget();
-                drivetrain.setRotation(drivetrain.getGyroRot() + periodic.yaw);
-            }
-        });
         aimbotLoop.startPeriodic(0.5);
     }
 
@@ -36,6 +35,7 @@ public class RunCenterOnLimelight extends CommandBase {
     public void end(boolean interrupted) {
         drivetrain.overrideDrivetrain = false;
         limelight.setLights(1);
+        aimbotLoop.stop();
     }
 
     @Override

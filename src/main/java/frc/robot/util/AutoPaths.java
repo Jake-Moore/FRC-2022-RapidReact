@@ -59,7 +59,7 @@ public class AutoPaths {
                     new RunTimer(5),
                     new RunShooterPivot(shooter, -15000),
                     new RunRotateBot(drivetrain, 180)
-                )).andThen(new ParallelRaceGroup(
+                ))/*.andThen(new ParallelRaceGroup(
                     new RunTimer(1.5),
                     new RunCenterOnLimelight(drivetrain, limelight)
                 ))
@@ -68,7 +68,7 @@ public class AutoPaths {
                 .andThen(new ParallelRaceGroup(
                     new RunTimer(2.5),
                     new RunShooterRollers(shooter, -0.75, 0)
-                )).andThen(new RunShooterWheels(shooter, 0, 0))
+                )).andThen(new RunShooterWheels(shooter, 0, 0))*/
             )
         );
     }

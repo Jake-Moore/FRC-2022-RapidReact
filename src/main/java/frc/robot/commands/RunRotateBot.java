@@ -8,29 +8,30 @@ import frc.robot.util.Target;
 public class RunRotateBot extends CommandBase {
     private final Drivetrain drivetrain;
     private final double deltaDegrees;
+    private final Notifier aimbotLoop;
+    private double target;
     public RunRotateBot(Drivetrain drivetrain, double deltaDegrees) {
         this.drivetrain = drivetrain;
         this.deltaDegrees = deltaDegrees;
+
+        aimbotLoop = new Notifier(() -> {
+            drivetrain.setRotation(target);
+        });
     }
 
     @Override
     public void initialize() {
         drivetrain.overrideDrivetrain = true;
 
-        double target = drivetrain.getGyroRot() + deltaDegrees;
+        target = drivetrain.getGyroRot() + deltaDegrees;
         drivetrain.setRotation(target);
-
-        Notifier aimbotLoop = new Notifier(() -> {
-            if (drivetrain.overrideDrivetrain) {
-                drivetrain.setRotation(target);
-            }
-        });
         aimbotLoop.startPeriodic(0.5);
     }
 
     @Override
     public void end(boolean interrupted) {
         drivetrain.overrideDrivetrain = false;
+        aimbotLoop.stop();
     }
 
     @Override
