@@ -26,13 +26,11 @@ public class Drivetrain extends SubsystemBase {
         mLeftA.config_kI(driveID, Constants.driveI);
         mLeftA.config_kD(driveID, Constants.driveD);
         mLeftA.config_kF(driveID, Constants.driveF);
-        mLeftA.configPeakOutputForward(Constants.driveMaxPower); mLeftA.configPeakOutputReverse(-Constants.driveMaxPower);
         mLeftA.setSelectedSensorPosition(0);
         mRightA.config_kP(driveID, Constants.driveP);
         mRightA.config_kI(driveID, Constants.driveI);
         mRightA.config_kD(driveID, Constants.driveD);
         mRightA.config_kF(driveID, Constants.driveF);
-        mRightA.configPeakOutputForward(Constants.driveMaxPower); mRightA.configPeakOutputReverse(-Constants.driveMaxPower);
         mRightA.setSelectedSensorPosition(0);
 
         mLeftA.setNeutralMode(NeutralMode.Coast);
@@ -131,5 +129,10 @@ public class Drivetrain extends SubsystemBase {
     public void setDrivePositions(double left, double right) {
         mLeftA.set(ControlMode.Position, left);
         mRightA.set(ControlMode.Position, right);
+    }
+
+    public void setDriveMaxPower(double driveMaxPower) {
+        mLeftA.configPeakOutputForward(driveMaxPower); mLeftA.configPeakOutputReverse(-driveMaxPower);
+        mRightA.configPeakOutputForward(driveMaxPower); mRightA.configPeakOutputReverse(-driveMaxPower);
     }
 }

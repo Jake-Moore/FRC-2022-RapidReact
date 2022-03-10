@@ -18,7 +18,7 @@ public class JoystickAxisToButton {
         this.axis = axis;
 
         loop = new Notifier(() -> {
-            boolean pressed = joystick.getRawAxis(axis) >= 0.1;
+            boolean pressed = joystick.getRawAxis(axis) >= 0.5;
 
             if (!wasHeld && pressed) { //If newly pressed
                 runHeldCommands();
@@ -26,12 +26,13 @@ public class JoystickAxisToButton {
             }else if (wasHeld && pressed) { //If continued press
                 runHeldCommands();
             }else if (wasHeld) { //If was pressed but no longer (released)
+                cancelHeldCommands();
                 runReleasedCommands();
             }
 
             wasHeld = pressed;
         });
-        loop.startPeriodic(0.01);
+        loop.startPeriodic(0.02);
     }
 
     List<Command> heldCommands = new ArrayList<>();
@@ -41,6 +42,11 @@ public class JoystickAxisToButton {
     private void runHeldCommands() {
         for (Command held : heldCommands) {
             held.schedule(true);
+        }
+    }
+    private void cancelHeldCommands() {
+        for (Command held : heldCommands) {
+            held.cancel();
         }
     }
 
@@ -65,6 +71,6 @@ public class JoystickAxisToButton {
     }
 
     public boolean get() {
-        return joystick.getRawAxis(axis) >= 0.1;
+        return joystick.getRawAxis(axis) >= 0.5;
     }
 }

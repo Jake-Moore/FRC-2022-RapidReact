@@ -77,6 +77,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        kRobotContainer.drivetrain.setDriveMaxPower(Constants.driveMaxPowerAuto);
         NamedCommand command = paths.get(kChooser.getSelected());
         if (command != null) {
             command.getCommand().schedule();
@@ -93,6 +94,7 @@ public class Robot extends TimedRobot {
     /** This function is called once when teleop is enabled. */
     @Override
     public void teleopInit() {
+        kRobotContainer.drivetrain.setDriveMaxPower(Constants.driveMaxPowerTeleop);
         // This makes sure that the autonomous stops running when
         // teleop starts running. If you want the autonomous to
         // continue until interrupted by another command, remove

@@ -60,5 +60,6 @@ public class Constants {
     public static final double driveI = 0.0;
     public static final double driveD = 0.0;
     public static final double driveF = 0.0;
-    public static final double driveMaxPower = 0.25;
+    public static final double driveMaxPowerAuto = 0.225;
+    public static final double driveMaxPowerTeleop = 1;
 }

@@ -13,17 +13,15 @@ import frc.robot.subsystems.ClimbArms;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
-import frc.robot.util.AutoPaths;
-import frc.robot.util.JoystickAxisToButton;
-import frc.robot.util.RequireButton;
+import frc.robot.util.*;
 
 @SuppressWarnings("unused")
 public class RobotContainer {
     //Subsystems
-    private final ClimbArms climbArms = new ClimbArms();
-    private final Drivetrain drivetrain = new Drivetrain();
-    private final Shooter shooter = new Shooter();
-    private final Limelight limelight = new Limelight();
+    public final ClimbArms climbArms = new ClimbArms();
+    public final Drivetrain drivetrain = new Drivetrain();
+    public final Shooter shooter = new Shooter();
+    public final Limelight limelight = new Limelight();
 
     public AutoPaths ap = new AutoPaths(climbArms, drivetrain, shooter, limelight);
 
@@ -57,13 +55,11 @@ public class RobotContainer {
     private final JoystickButton sJoyBBL = new JoystickButton(sJoy, 5); //Left Bumper Button
     private final JoystickButton sJoyBBR = new JoystickButton(sJoy, 6); //Right Bumper Button
     private final JoystickButton sJoyBBack = new JoystickButton(sJoy, 7); //Back Button
-    private final JoystickAxisToButton sJoyBTR = new JoystickAxisToButton(sJoy, -1);
-    private final JoystickAxisToButton sJoyBTL = new JoystickAxisToButton(sJoy, -1);
+    private final JoystickAxisToButton sJoyBTR = new JoystickAxisToButton(sJoy, 3);
+    private final JoystickAxisToButton sJoyBTL = new JoystickAxisToButton(sJoy, 2);
 
     private final JoystickButton sJoyBLS = new JoystickButton(sJoy, 9); //Left Stick Button
     private final JoystickButton sJoyBRS = new JoystickButton(sJoy, 10); //Right Stick Button
-
-    //TODO write a class to interpret triggers as buttons for Secondary controller
 
     private final POVButton sJoyPOVN = new POVButton(sJoy, 0); //North
     private final POVButton sJoyPOVS = new POVButton(sJoy, 180); //South
@@ -161,6 +157,12 @@ public class RobotContainer {
         sJoyPOVN.whileHeld(new RunShooterRollers(shooter, -0.75, 0));
         sJoyPOVS.whileHeld(new RunShooterRollers(shooter, 0.75, 0));
         //Add sJoyBBack that is taco bell but 1 ball
+
+
+
+        //sJoyBTL.whenPressed(new RunPressedTest());
+        //sJoyBTL.whileHeld(new RunWhileHeldTest());
+        //sJoyBTL.whenReleased(new RunReleasedTest());
     }
 
     public void updateSmartDashboard() {
