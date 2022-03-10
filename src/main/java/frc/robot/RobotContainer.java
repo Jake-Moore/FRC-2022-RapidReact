@@ -14,6 +14,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
 import frc.robot.util.AutoPaths;
+import frc.robot.util.JoystickAxisToButton;
 import frc.robot.util.RequireButton;
 
 @SuppressWarnings("unused")
@@ -56,6 +57,9 @@ public class RobotContainer {
     private final JoystickButton sJoyBBL = new JoystickButton(sJoy, 5); //Left Bumper Button
     private final JoystickButton sJoyBBR = new JoystickButton(sJoy, 6); //Right Bumper Button
     private final JoystickButton sJoyBBack = new JoystickButton(sJoy, 7); //Back Button
+    private final JoystickAxisToButton sJoyBTR = new JoystickAxisToButton(sJoy, -1);
+    private final JoystickAxisToButton sJoyBTL = new JoystickAxisToButton(sJoy, -1);
+
     private final JoystickButton sJoyBLS = new JoystickButton(sJoy, 9); //Left Stick Button
     private final JoystickButton sJoyBRS = new JoystickButton(sJoy, 10); //Right Stick Button
 
@@ -132,7 +136,7 @@ public class RobotContainer {
         joyBBL.whileHeld(new RunShooterRollers(shooter, 0.75, 0)); //Intake Belts
         joyBTR.whenPressed(new RunShooterPivot(shooter, -55500)); //Set Pivot to intake
         joyBBR.whenPressed(new RunShooterPivot(shooter, 0)); //Set Pivot to stow
-        joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh Shit Button
+        joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh-Shit Button
                 new ParallelCommandGroup(
                         new RunStraightRopePos(climbArms, 0),
                         new RunPivotRopePos(climbArms, 0)
@@ -142,14 +146,21 @@ public class RobotContainer {
 
         //Secondary Controller Buttons//
         sJoyBLS.whenPressed(new RunLights(limelight, 3, 1));
-
-
-        //TODO write Secondary controller button code
-
-        //Old and will be removed when ^
-        sJoyPOVN.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunCenterOnLimelight(drivetrain, limelight)));
-        sJoyBY.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight)));
-        sJoyBY.whenReleased(new RunShooterWheels(shooter, 0, 0));
+        sJoyBBR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunCenterOnLimelight(drivetrain, limelight)));
+        sJoyBTR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight)));
+        sJoyBTR.whenReleased(new RunShooterWheels(shooter, 0, 0));
+        sJoyBBL.whileHeld(new RunTargetShooterSpeed(shooter, limelight));
+        sJoyBBL.whenReleased(new RunShooterWheels(shooter, 0, 0));
+        sJoyBTL.whileHeld(new RunShooterRollers(shooter, -0.75, 0)); //Change later to 1 ball per click (pos)
+        sJoyBY.whenPressed(new RunShooterPivotAdj(shooter, 500, 0, -55500));
+        sJoyBA.whenPressed(new RunShooterPivotAdj(shooter, -500, 0, -55500));
+        sJoyBRS.whileHeld(new ParallelCommandGroup(
+                new RunShooterWheels(shooter, -4096, 0),
+                new RunShooterRollers(shooter, -0.75, 0)
+        ));
+        sJoyPOVN.whileHeld(new RunShooterRollers(shooter, -0.75, 0));
+        sJoyPOVS.whileHeld(new RunShooterRollers(shooter, 0.75, 0));
+        //Add sJoyBBack that is taco bell but 1 ball
     }
 
     public void updateSmartDashboard() {

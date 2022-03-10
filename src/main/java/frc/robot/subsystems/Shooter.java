@@ -139,4 +139,8 @@ public class Shooter extends SubsystemBase {
         setWheelSpeed(speed);
         setPivot(angle);
     }
+
+    public void targetShooter(double speed) {
+        setWheelSpeed(speed);
+    }
 }
