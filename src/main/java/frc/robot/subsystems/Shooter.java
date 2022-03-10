@@ -40,6 +40,10 @@ public class Shooter extends SubsystemBase {
         //Pivot Encoder
         pivotEncoder.setAverageBits(10); //Not sure if this is critical, but it works with it :)
 
+        calibrate();
+    }
+
+    public void calibrate() {
         //Calibrate the falcon using the abs encoder. Delayed 1 second to allow it to find an average
         new Timer().schedule(new TimerTask() {
             @Override

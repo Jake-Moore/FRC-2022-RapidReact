@@ -30,7 +30,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        //House Keeping
         kRobotContainer = new RobotContainer();
+        kRobotContainer.limelight.setLights(1);
+        kRobotContainer.shooter.calibrate();
 
         //Auto Paths
         kChooser.setDefaultOption("None", null);

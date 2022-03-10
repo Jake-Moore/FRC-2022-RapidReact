@@ -51,7 +51,7 @@ public class AutoPaths {
                     new RunShooterPivot(shooter, -55500),
                     new RunTimer(1.5)
                 ).andThen(new ParallelRaceGroup(
-                    new RunDrivePos(drivetrain, getTicksFromDist(40), getTicksFromDist(40)),
+                    new RunDrivePos(drivetrain, getTicksFromDist(50), getTicksFromDist(50)),
                     new RunShooterWheels(shooter, 4096, 0),
                     new RunShooterRollers(shooter, 0.75, 0)
                 )).andThen(new ParallelRaceGroup(
