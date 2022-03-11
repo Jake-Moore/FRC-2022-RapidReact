@@ -13,18 +13,20 @@ public class RunTargetShooter extends CommandBase {
     }
 
     boolean finished = false;
+    double prevSpeed = 0;
     @Override
     public void execute() {
         limelight.setLights(3);
         double dist = limelight.getDistance();
         double angle = shooter.getIdealAngle(dist);
         double speed = shooter.getIdealSpeed(dist);
+        double useSpeed = (Math.abs(speed - prevSpeed) >= 10) ? speed : prevSpeed;
         if (dist < 0 || angle == 401) { return; }
-        shooter.targetShooter(angle, speed);
+        shooter.targetShooter(angle, useSpeed);
 
         double[] speeds = shooter.getWheelSpeeds();
         //If wheelA and wheelB are within acceptable speed, and the angle is within accepted range, we are finished
-        finished = Math.abs(speeds[0] - speed) <= 25 && Math.abs(speeds[1] - speed) <= 25 && Math.abs(shooter.getPivotTargetPos() - angle) <= 100;
+        finished = Math.abs(speeds[0] - useSpeed) <= 25 && Math.abs(speeds[1] - useSpeed) <= 25 && Math.abs(shooter.getPivotTargetPos() - angle) <= 100;
     }
 
     @Override

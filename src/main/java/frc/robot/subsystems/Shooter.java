@@ -131,7 +131,7 @@ public class Shooter extends SubsystemBase {
     // less than 45 limelight can't find target
     public double getIdealSpeed(double distance) {
         if (distance <= 45 || distance >= 250) { return -1; }
-        return (1 + Math.pow(distance/230, 2)*0.11)*(-Math.pow(1.00941, distance+640) - 5793.4);
+        return (1 + Math.pow(distance/200, 2)*0.11)*(-Math.pow(1.00941, distance+640) - 5793.4);
     }
 
     public double getIdealAngle(double distance) {

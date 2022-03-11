@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -30,7 +31,7 @@ public class RobotContainer {
     private final Joystick sJoy = new Joystick(Constants.sJoyID);
 
     //Primary Controller Buttons//
-    //private final JoystickButton joyBSquare   = new JoystickButton(pJoy, 1); //Square
+    private final JoystickButton joyBSquare   = new JoystickButton(pJoy, 1); //Square
     private final JoystickButton joyBX        = new JoystickButton(pJoy, 2); //X
     private final JoystickButton joyBCircle   = new JoystickButton(pJoy, 3); //Circle
     private final JoystickButton joyBTriangle = new JoystickButton(pJoy, 4); //Triangle
@@ -41,6 +42,7 @@ public class RobotContainer {
     private final JoystickButton joyBShare    = new JoystickButton(pJoy, 9); //Share Button
     private final JoystickButton joyBOptions  = new JoystickButton(pJoy, 10);//Options Button
     private final JoystickButton joyBLeftJoystick  = new JoystickButton(pJoy, 11);//L Joystick Button
+    private final JoystickButton joyBRightJoystick  = new JoystickButton(pJoy, 12);//R Joystick Button
     private final JoystickButton joyBPS       = new JoystickButton(pJoy, 13);//PlayStation Button
     private final JoystickButton joyBBig      = new JoystickButton(pJoy, 14);//Big (Center) Button
     private final POVButton joyPOVN = new POVButton(pJoy, 0);   //North
@@ -85,9 +87,10 @@ public class RobotContainer {
         //-----START CLIMB-----//
         joyBShare.whileHeld(new RequireButton(new ParallelCommandGroup(
                 new RunStraightRopePosAdj(climbArms, 20000),
-                new RunShooterPivot(shooter, -4000)
+                new RunShooterPivot(shooter, -4000),
+                new RunBrake(climbArms, 90, 90)
         ), joyBPS));
-        joyBBig.whileHeld(new RequireButton(new RunPivotPos(climbArms, -4000), joyBPS));
+        joyBBig.whileHeld(new RequireButton(new RunPivotPos(climbArms, -2500), joyBPS));
         joyBOptions.whileHeld(new RequireButton(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 0),
                 new RunPivotRopePos(climbArms, 240000)
@@ -110,9 +113,9 @@ public class RobotContainer {
                 ).andThen(new RunPivotRopePos(climbArms, 50000)
                 ).andThen(new RunPivotPos(climbArms, 7000)
                 ).andThen(new ParallelCommandGroup(
-                        new RunStraightRopePos(climbArms, 50000),
+                        new RunStraightRopePos(climbArms, 60000),
                         new RunPivotRopePos(climbArms, 0)
-                )).andThen(new RunPivotPos(climbArms, -3000))
+                )).andThen(new RunPivotPos(climbArms, -2500))
                 , joyBPS));
         joyBX.whenPressed(new RequireButton(
                 new ParallelCommandGroup(
@@ -123,13 +126,23 @@ public class RobotContainer {
                 ).andThen(new RunStraightRopePos(climbArms, 5000)
                 ).andThen(new RunShooterPivot(shooter, 8000))
                 , joyBPS));
-        // joyBSquare reserved for additional climb buttons if needed
+        joyBSquare.whenPressed(new RunStraightRopePos(climbArms, 5000)
+                .andThen(new RunPivotRopePos(climbArms, 50000))
+                .andThen(new RunPivotPos(climbArms, 2000))
+                .andThen(new RunPivotRopePos(climbArms, 0))
+                .andThen(new RunBrake(climbArms, 60, 115))
+        );
+
+        joyBRightJoystick.whenPressed(new RequireButton(new RunBrake(climbArms, 60, 115), joyBPS));
         //-----END CLIMB-----//
 
         //Primary Controller Buttons//
         joyBLeftJoystick.whileHeld(new RunLights(limelight, 3, 1)); //Lights
-        joyBTL.whileHeld(new RunShooterWheels(shooter, 4096, 0)); //Intake Wheels
-        joyBBL.whileHeld(new RunShooterRollers(shooter, 0.75, 0)); //Intake Belts
+        joyBTL.whileHeld(new ParallelCommandGroup(
+                new RunShooterWheels(shooter, 4096, 0), //Intake Wheels
+                new RunShooterRollers(shooter, 0.5, 0) //Slightly Intake Rollers
+        ));
+        joyBBL.whileHeld(new RunShooterRollers(shooter, -0.5, 0)); //Intake Belts
         joyBTR.whenPressed(new RunShooterPivot(shooter, -55500)); //Set Pivot to intake
         joyBBR.whenPressed(new RunShooterPivot(shooter, 0)); //Set Pivot to stow
         joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh-Shit Button
@@ -144,9 +157,9 @@ public class RobotContainer {
         sJoyBLS.whenPressed(new RunLights(limelight, 3, 1));
         sJoyBBR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunCenterOnLimelight(drivetrain, limelight)));
         sJoyBTR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight)));
-        sJoyBTR.whenReleased(new RunShooterWheels(shooter, 0, 0));
+        sJoyBTR.whenReleased(new ParallelRaceGroup(new RunTimer(0.25), new RunShooterWheels(shooter, 0, 0)));
         sJoyBBL.whileHeld(new RunTargetShooterSpeed(shooter, limelight));
-        sJoyBBL.whenReleased(new RunShooterWheels(shooter, 0, 0));
+        sJoyBBL.whenReleased(new ParallelRaceGroup(new RunTimer(0.25), new RunShooterWheels(shooter, 0, 0)));
         sJoyBTL.whileHeld(new RunShooterRollers(shooter, -0.75, 0)); //Change later to 1 ball per click (pos)
         sJoyBY.whenPressed(new RunShooterPivotAdj(shooter, 500, 0, -55500));
         sJoyBA.whenPressed(new RunShooterPivotAdj(shooter, -500, 0, -55500));

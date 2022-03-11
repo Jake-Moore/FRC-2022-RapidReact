@@ -27,7 +27,7 @@ public class ClimbArms extends SubsystemBase {
     public final Servo brakeR;
 
     //PID Sets
-    public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 64, 0.75);
+    public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 64, 0.5);
     public final PID pivotPID = new PID(Constants.CLIMB_PIVOT_P, Constants.CLIMB_PIVOT_I, Constants.CLIMB_PIVOT_D, Constants.CLIMB_PIVOT_F, 128, 0.5);
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
