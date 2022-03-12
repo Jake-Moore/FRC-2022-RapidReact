@@ -104,6 +104,7 @@ public class Robot extends TimedRobot {
         // this line or comment it out.
         CommandScheduler.getInstance().cancelAll();
         kRobotContainer.init();
+        kRobotContainer.drivetrain.setOverrideDrivetrain(false);
     }
 
     /** This function is called periodically during operator control. */

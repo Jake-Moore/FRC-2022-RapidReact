@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -22,6 +23,11 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
         //Drivetrain PID
+        mLeftA.configFactoryDefault();
+        mLeftB.configFactoryDefault();
+        mRightA.configFactoryDefault();
+        mRightB.configFactoryDefault();
+
         setOverrideDrivetrain(false);
         mLeftA.setSelectedSensorPosition(0);
         mRightA.setSelectedSensorPosition(0);
@@ -64,7 +70,6 @@ public class Drivetrain extends SubsystemBase {
             mRightA.config_kD(driveID, 0);
             mRightA.config_kF(driveID, 0);
         }
-
     }
     public boolean getOverrideDrivetrain() {
         return overrideDrivetrain;
@@ -74,9 +79,7 @@ public class Drivetrain extends SubsystemBase {
         //this.setRotation = setRotation;
         double delta = getDeltaTargetPos(setRotation);
         mLeftA.set(ControlMode.Position, mLeftA.getSelectedSensorPosition()-delta);
-        mLeftB.set(ControlMode.Position, mLeftB.getSelectedSensorPosition()-delta);
         mRightA.set(ControlMode.Position, mRightA.getSelectedSensorPosition()+delta);
-        mRightB.set(ControlMode.Position, mRightB.getSelectedSensorPosition()+delta);
     }
 
     //Drive Modes
