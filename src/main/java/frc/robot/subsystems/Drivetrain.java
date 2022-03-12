@@ -17,29 +17,21 @@ public class Drivetrain extends SubsystemBase {
 
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
-    public boolean overrideDrivetrain = false;
+    private boolean overrideDrivetrain;
+    int driveID = 0;
 
     public Drivetrain() {
         //Drivetrain PID
-        int driveID = 0;
-        mLeftA.config_kP(driveID, Constants.driveP);
-        mLeftA.config_kI(driveID, Constants.driveI);
-        mLeftA.config_kD(driveID, Constants.driveD);
-        mLeftA.config_kF(driveID, Constants.driveF);
+        setOverrideDrivetrain(false);
         mLeftA.setSelectedSensorPosition(0);
-        mRightA.config_kP(driveID, Constants.driveP);
-        mRightA.config_kI(driveID, Constants.driveI);
-        mRightA.config_kD(driveID, Constants.driveD);
-        mRightA.config_kF(driveID, Constants.driveF);
         mRightA.setSelectedSensorPosition(0);
 
         mLeftA.setNeutralMode(NeutralMode.Coast);
-        mLeftA.setSelectedSensorPosition(0);
         mLeftB.setNeutralMode(NeutralMode.Coast);
         mLeftB.setSelectedSensorPosition(0);
         mRightA.setNeutralMode(NeutralMode.Coast);
         mRightB.setNeutralMode(NeutralMode.Coast);
-        mLeftB.setSelectedSensorPosition(0);
+        mRightB.setSelectedSensorPosition(0);
 
         mLeftA.setInverted(true);
         mLeftB.setInverted(true);
@@ -50,34 +42,41 @@ public class Drivetrain extends SubsystemBase {
         mRightB.follow(mRightA);
 
         zeroGyro();
-
-        /* SetRotation Code
-        Notifier aimbotLoop = new Notifier(() -> {
-            if (aimbot) {
-                double error = (setRotation - getGyroRot()) / 40D; //Pos = clockwise rotation [-1, 17/40]
-                double vel = 10240 * (error/Math.abs(error))*Math.pow(Math.abs(error), 1.75);
-                SmartDashboard.putNumber("error%", error*100D);
-                if (Math.abs(error) > 0.05D) {
-                    setVelocities(vel);
-                }else {
-                    aimbot = false;
-                    driveFromJoysticks(0, 0);
-                }
-
-
-                double delta = getDeltaTargetPos(setRotation);
-                mLeftA.set(ControlMode.Position, mLeftA.getSelectedSensorPosition()-delta);
-                mRightA.set(ControlMode.Position, mRightA.getSelectedSensorPosition()+delta);
-            }
-        });
-        aimbotLoop.startPeriodic(0.02);
-        */
     }
+    public void setOverrideDrivetrain(boolean overrideDrivetrain) {
+        this.overrideDrivetrain = overrideDrivetrain;
+        if (overrideDrivetrain) {
+            mLeftA.config_kP(driveID, Constants.driveP);
+            mLeftA.config_kI(driveID, Constants.driveI);
+            mLeftA.config_kD(driveID, Constants.driveD);
+            mLeftA.config_kF(driveID, Constants.driveF);
+            mRightA.config_kP(driveID, Constants.driveP);
+            mRightA.config_kI(driveID, Constants.driveI);
+            mRightA.config_kD(driveID, Constants.driveD);
+            mRightA.config_kF(driveID, Constants.driveF);
+        }else {
+            mLeftA.config_kP(driveID, 0);
+            mLeftA.config_kI(driveID, 0);
+            mLeftA.config_kD(driveID, 0);
+            mLeftA.config_kF(driveID, 0);
+            mRightA.config_kP(driveID, 0);
+            mRightA.config_kI(driveID, 0);
+            mRightA.config_kD(driveID, 0);
+            mRightA.config_kF(driveID, 0);
+        }
+
+    }
+    public boolean getOverrideDrivetrain() {
+        return overrideDrivetrain;
+    }
+
     public void setRotation(double setRotation) {
         //this.setRotation = setRotation;
         double delta = getDeltaTargetPos(setRotation);
         mLeftA.set(ControlMode.Position, mLeftA.getSelectedSensorPosition()-delta);
+        mLeftB.set(ControlMode.Position, mLeftB.getSelectedSensorPosition()-delta);
         mRightA.set(ControlMode.Position, mRightA.getSelectedSensorPosition()+delta);
+        mRightB.set(ControlMode.Position, mRightB.getSelectedSensorPosition()+delta);
     }
 
     //Drive Modes

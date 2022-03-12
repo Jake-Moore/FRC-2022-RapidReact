@@ -20,7 +20,6 @@ public class RunShooterWheels extends CommandBase {
     @Override
     public void execute() {
         shooter.setWheelSpeed(start);
-        SmartDashboard.putBoolean("aaaaa", start == 0);
     }
 
     @Override

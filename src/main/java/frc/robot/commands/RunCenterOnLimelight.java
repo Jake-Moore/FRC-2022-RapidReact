@@ -22,7 +22,7 @@ public class RunCenterOnLimelight extends CommandBase {
 
     @Override
     public void initialize() {
-        drivetrain.overrideDrivetrain = true;
+        drivetrain.setOverrideDrivetrain(true);
         limelight.setLights(3);
 
         Target initial = limelight.getTarget();
@@ -33,7 +33,7 @@ public class RunCenterOnLimelight extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.overrideDrivetrain = false;
+        drivetrain.setOverrideDrivetrain(false);
         limelight.setLights(1);
         aimbotLoop.stop();
     }

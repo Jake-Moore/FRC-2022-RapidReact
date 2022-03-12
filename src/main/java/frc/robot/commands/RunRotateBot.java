@@ -21,7 +21,7 @@ public class RunRotateBot extends CommandBase {
 
     @Override
     public void initialize() {
-        drivetrain.overrideDrivetrain = true;
+        drivetrain.setOverrideDrivetrain(true);
 
         target = drivetrain.getGyroRot() + deltaDegrees;
         drivetrain.setRotation(target);
@@ -30,7 +30,7 @@ public class RunRotateBot extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.overrideDrivetrain = false;
+        drivetrain.setOverrideDrivetrain(false);
         aimbotLoop.stop();
     }
 
