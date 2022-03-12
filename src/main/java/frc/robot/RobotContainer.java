@@ -83,6 +83,8 @@ public class RobotContainer {
                 drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * 0.65D, pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
         ));
 
+        //Hmm, this is scuffed code
+        (new JoystickAxisToButton(pJoy, 1)).whenPressed(new RunUnlockDrive(drivetrain));
 
         //-----START CLIMB-----//
         joyBShare.whileHeld(new RequireButton(new ParallelCommandGroup(

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
@@ -18,7 +19,7 @@ public class Drivetrain extends SubsystemBase {
 
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
 
-    private boolean overrideDrivetrain;
+    public boolean overrideDrivetrain;
     int driveID = 0;
 
     public Drivetrain() {
@@ -136,5 +137,10 @@ public class Drivetrain extends SubsystemBase {
     public void setDriveMaxPower(double driveMaxPower) {
         mLeftA.configPeakOutputForward(driveMaxPower); mLeftA.configPeakOutputReverse(-driveMaxPower);
         mRightA.configPeakOutputForward(driveMaxPower); mRightA.configPeakOutputReverse(-driveMaxPower);
+    }
+
+    public void setPower(double power) {
+        mLeftA.set(TalonFXControlMode.PercentOutput, power);
+        mRightA.set(TalonFXControlMode.PercentOutput, power);
     }
 }

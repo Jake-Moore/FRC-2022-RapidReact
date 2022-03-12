@@ -136,7 +136,7 @@ public class Shooter extends SubsystemBase {
 
     public double getIdealAngle(double distance) {
         if (distance <= 45 || distance >= 250) { return 401; }
-        return -11533.2 * Math.log10(distance - 30) + 8772.51;
+        return -11533.2 * Math.log10(distance - 38) + 8772.51;
     }
 
     public void targetShooter(double angle, double speed) {
