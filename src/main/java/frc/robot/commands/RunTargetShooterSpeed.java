@@ -7,6 +7,10 @@ import frc.robot.subsystems.Shooter;
 public class RunTargetShooterSpeed extends CommandBase {
     private final Shooter shooter;
     private final Limelight limelight;
+
+    /**
+     * Finishes When Speeds are Within 25 ticks/100ms
+     */
     public RunTargetShooterSpeed(Shooter shooter, Limelight limelight) {
         this.shooter = shooter;
         this.limelight = limelight;

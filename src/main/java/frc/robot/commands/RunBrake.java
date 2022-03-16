@@ -8,6 +8,9 @@ public class RunBrake extends CommandBase {
     private final double angleL;
     private final double angleR;
 
+    /**
+     * Finishes Immediately
+     */
     public RunBrake(ClimbArms climbArms, double angleL, double angleR) {
         this.climbArms = climbArms;
         this.angleL = angleL;

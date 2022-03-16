@@ -6,6 +6,10 @@ import frc.robot.subsystems.ClimbArms;
 public class RunStraightRopePos extends CommandBase {
     private final ClimbArms climbArms;
     private final double pos;
+
+    /**
+     * Finishes When Straight Arm Pos is Within 1,000 Ticks
+     */
     public RunStraightRopePos(ClimbArms climbArms, double pos) {
         this.climbArms = climbArms;
         this.pos = pos;

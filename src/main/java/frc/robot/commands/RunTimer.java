@@ -7,6 +7,9 @@ public class RunTimer extends CommandBase {
     Timer time;
     double dt;
 
+    /**
+     * Finishes after dt milliseconds
+     */
     public RunTimer(double dt) {
         time = new Timer();
         this.dt = dt;
@@ -24,7 +27,7 @@ public class RunTimer extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        time.stop(); //ZA WARUDO
+        time.stop();
     }
 
     @Override

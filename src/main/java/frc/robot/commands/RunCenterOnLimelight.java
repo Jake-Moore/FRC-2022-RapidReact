@@ -11,6 +11,10 @@ public class RunCenterOnLimelight extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
     private final Notifier aimbotLoop;
+
+    /**
+     * Finishes When Rotation is Within 0.5 Yaw
+     */
     public RunCenterOnLimelight(Drivetrain drivetrain, Limelight limelight) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
@@ -43,6 +47,6 @@ public class RunCenterOnLimelight extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return (Math.abs(limelight.getTarget().yaw) <= 0.5);
     }
 }

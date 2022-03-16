@@ -6,6 +6,10 @@ import frc.robot.subsystems.ClimbArms;
 public class RunPivotPos extends CommandBase {
     private final ClimbArms climbArms;
     private final double pos;
+
+    /**
+     * Finishes When Pivot Pos is Within 1,000 ticks
+     */
     public RunPivotPos(ClimbArms climbArms, double pos) {
         this.climbArms = climbArms;
         this.pos = pos;

@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                mPivoter.setSelectedSensorPosition((230.5 - getPivotAbsolutePos()) * (72706/142D));
+                mPivoter.setSelectedSensorPosition((230.5 - getPivotAbsolutePos()) * (72706/142D)); //230.5
             }
         }, 1000);
     }
@@ -121,6 +121,9 @@ public class Shooter extends SubsystemBase {
     }
     public double getPivotTargetPos() {
         return pivot;
+    }
+    public double getPivot() {
+        return mPivoter.getSelectedSensorPosition();
     }
 
     //Returns the angle (to one decimal) of the shooter arm

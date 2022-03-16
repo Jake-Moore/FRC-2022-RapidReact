@@ -6,6 +6,10 @@ import frc.robot.subsystems.Shooter;
 public class RunShooterPivot extends CommandBase {
     private final Shooter shooter;
     private final double pos;
+
+    /**
+     * Finishes When Shooter Pivot is Within 128 Ticks
+     */
     public RunShooterPivot(Shooter shooter, double pos) {
         this.shooter = shooter;
         this.pos = pos;
@@ -26,6 +30,6 @@ public class RunShooterPivot extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return true;
+        return Math.abs(shooter.getPivot() - pos) <= 128;
     }
 }

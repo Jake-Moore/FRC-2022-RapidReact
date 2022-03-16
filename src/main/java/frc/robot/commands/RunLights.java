@@ -9,6 +9,10 @@ public class RunLights extends CommandBase {
     private final Limelight limelight;
     private final int start;
     private final int end;
+
+    /**
+     * Finishes After 100ms
+     */
     public RunLights(Limelight limelight, int start, int end) {
         this.limelight = limelight;
         this.start = start;

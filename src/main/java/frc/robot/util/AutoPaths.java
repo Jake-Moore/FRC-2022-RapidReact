@@ -45,24 +45,6 @@ public class AutoPaths {
 
         trajs.add(
             new NamedCommand(
-                "(SCUFFED) Taxi Back + 1 Ball Forward",
-
-                //new RunLights(limelight, 3, 3)
-                //.andThen(new RunTargetShooter(shooter, limelight))
-                /*.andThen(new ParallelRaceGroup(
-                    new RunTimer(2.5),
-                    new RunShooterRollers(shooter, -0.75, 0)
-                ))
-                .andThen(new RunShooterWheels(shooter, 0, 0))
-                .andThen(*/new ParallelRaceGroup(
-                    new RunTimer(1.5),
-                    new RunDrive(drivetrain, -0.5)
-                )//)
-            )
-        );
-
-        trajs.add(
-            new NamedCommand(
                 "Pickup Forward + 2 Ball + Taxi",
 
                 new ParallelCommandGroup(

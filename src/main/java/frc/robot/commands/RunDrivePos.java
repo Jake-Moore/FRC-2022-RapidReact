@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
@@ -9,6 +8,9 @@ public class RunDrivePos extends CommandBase {
     private final double left;
     private final double right;
 
+    /**
+     * Finishes When Position Values Are Within 100 Ticks
+     */
     public RunDrivePos(Drivetrain drivetrain, double left, double right) {
         this.drivetrain = drivetrain;
         this.left = left;

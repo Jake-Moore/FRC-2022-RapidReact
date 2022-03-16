@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
-import frc.robot.subsystems.ClimbArms;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.*;
 import frc.robot.util.*;
 
 @SuppressWarnings("unused")
@@ -23,6 +20,7 @@ public class RobotContainer {
     public final Drivetrain drivetrain = new Drivetrain();
     public final Shooter shooter = new Shooter();
     public final Limelight limelight = new Limelight();
+    public final Cameras cameras = new Cameras();
 
     public AutoPaths ap = new AutoPaths(climbArms, drivetrain, shooter, limelight);
 
@@ -78,13 +76,12 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
+        cameras.enableCameras();
+
         //Drivetrain
         drivetrain.setDefaultCommand(new RunCommand(() ->
                 drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * 0.65D, pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
         ));
-
-        //Hmm, this is scuffed code
-        (new JoystickAxisToButton(pJoy, 1)).whenPressed(new RunUnlockDrive(drivetrain));
 
         //-----START CLIMB-----//
         joyBShare.whileHeld(new RequireButton(new ParallelCommandGroup(
@@ -146,13 +143,17 @@ public class RobotContainer {
         ));
         joyBBL.whileHeld(new RunShooterRollers(shooter, -0.5, 0)); //Intake Belts
         joyBTR.whenPressed(new RunShooterPivot(shooter, -55500)); //Set Pivot to intake
-        joyBBR.whenPressed(new RunShooterPivot(shooter, 0)); //Set Pivot to stow
+        joyBBR.whenPressed(new RunShooterPivot(shooter, -6500)); //Set Pivot to stow
         joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh-Shit Button
                 new ParallelCommandGroup(
                         new RunStraightRopePos(climbArms, 0),
                         new RunPivotRopePos(climbArms, 0)
                 ).andThen(new RunPivotPos(climbArms, 0))
         ), joyBPS));
+        joyPOVN.whileHeld(new ParallelCommandGroup(
+                new RunShooterWheels(shooter, -8192, 0),
+                new RunShooterRollers(shooter, -0.75, 0)
+        ));
 
 
         //Secondary Controller Buttons//

@@ -6,6 +6,10 @@ import frc.robot.subsystems.ClimbArms;
 public class RunStraightRopePosAdj extends CommandBase {
     private final ClimbArms climbArms;
     private final double change;
+
+    /**
+     * Finishes Immediately
+     */
     public RunStraightRopePosAdj(ClimbArms climbArms, double change) {
         this.climbArms = climbArms;
         this.change = change;
@@ -21,4 +25,9 @@ public class RunStraightRopePosAdj extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {}
+
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 }

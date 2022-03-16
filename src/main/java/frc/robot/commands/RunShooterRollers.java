@@ -7,6 +7,10 @@ public class RunShooterRollers extends CommandBase {
     private final Shooter shooter;
     private final double start;
     private final double end;
+
+    /**
+     * Finishes NEVER
+     */
     public RunShooterRollers(Shooter shooter, double start, double end) {
         this.shooter = shooter;
         this.start = start;

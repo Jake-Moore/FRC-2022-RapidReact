@@ -8,6 +8,10 @@ public class RunShooterWheelsAdj extends CommandBase {
     private final double adj;
     private final double max;
     private final double min;
+
+    /**
+     * Finishes Immediately
+     */
     public RunShooterWheelsAdj(Shooter shooter, double adj, double max, double min) {
         this.shooter = shooter;
         this.adj = adj;

@@ -3,20 +3,21 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.util.Target;
 
 public class RunRotateBot extends CommandBase {
     private final Drivetrain drivetrain;
     private final double deltaDegrees;
     private final Notifier aimbotLoop;
     private double target;
+
+    /**
+     * Finishes When Rotation is Within 0.5 Degrees
+     */
     public RunRotateBot(Drivetrain drivetrain, double deltaDegrees) {
         this.drivetrain = drivetrain;
         this.deltaDegrees = deltaDegrees;
 
-        aimbotLoop = new Notifier(() -> {
-            drivetrain.setRotation(target);
-        });
+        aimbotLoop = new Notifier(() -> drivetrain.setRotation(target));
     }
 
     @Override
@@ -36,6 +37,6 @@ public class RunRotateBot extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return (Math.abs(drivetrain.getGyroRot() - target) <= 0.5);
     }
 }
