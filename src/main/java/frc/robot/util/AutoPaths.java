@@ -32,10 +32,10 @@ public class AutoPaths {
                 new RunDrivePos(drivetrain, -getTicksFromDist(45), -getTicksFromDist(45))
                 .andThen(new ParallelRaceGroup(
                     new RunTimer(1.5),
-                    new RunCenterOnLimelight(drivetrain, limelight)
+                    new RunCenterOnLimelight(drivetrain, limelight, 1)
                 ))
                 .andThen(new RunLights(limelight, 3, 3)
-                .andThen(new RunTargetShooter(shooter, limelight)
+                .andThen(new RunTargetShooter(shooter, limelight, 1)
                 .andThen(new ParallelRaceGroup(
                     new RunTimer(2.5),
                     new RunShooterRollers(shooter, -0.75, 0)
@@ -63,10 +63,10 @@ public class AutoPaths {
                     new RunRotateBot(drivetrain, 180)
                 )).andThen(new ParallelRaceGroup(
                     new RunTimer(1.5),
-                    new RunCenterOnLimelight(drivetrain, limelight)
+                    new RunCenterOnLimelight(drivetrain, limelight, 1)
                 ))
                 .andThen(new RunLights(limelight, 3, 3))
-                .andThen(new RunTargetShooter(shooter, limelight))
+                .andThen(new RunTargetShooter(shooter, limelight, 1))
                 .andThen(new ParallelRaceGroup(
                     new RunTimer(2.5),
                     new RunShooterRollers(shooter, -0.75, 0)

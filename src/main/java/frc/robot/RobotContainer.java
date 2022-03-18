@@ -141,9 +141,16 @@ public class RobotContainer {
                 new RunShooterWheels(shooter, 4096, 0), //Intake Wheels
                 new RunShooterRollers(shooter, 0.5, 0) //Slightly Intake Rollers
         ));
-        joyBBL.whileHeld(new RunShooterRollers(shooter, -0.5, 0)); //Intake Belts
-        joyBTR.whenPressed(new RunShooterPivot(shooter, -55500)); //Set Pivot to intake
-        joyBBR.whenPressed(new RunShooterPivot(shooter, -6500)); //Set Pivot to stow
+        joyBBL.whileHeld(new RunLights(limelight, 3, 3).andThen(new ParallelCommandGroup( //Auto Shot?
+                new RunCenterOnLimelight(drivetrain, limelight, 3),
+                new RunTargetShooter(shooter, limelight, 3)
+            ).andThen(
+                new RunShooterRollers(shooter, -0.5, 0)
+            )
+        ));
+        joyBBL.whenReleased(new RunLights(limelight, 1, 1).andThen(new RunShooterWheels(shooter, 0, 0)));
+        joyBTR.whileHeld(new RunShooterPivot(shooter, -55500)); //Set Pivot to intake
+        joyBBR.whileHeld(new RunShooterPivot(shooter, -6500)); //Set Pivot to stow
         joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh-Shit Button
                 new ParallelCommandGroup(
                         new RunStraightRopePos(climbArms, 0),
@@ -158,8 +165,8 @@ public class RobotContainer {
 
         //Secondary Controller Buttons//
         sJoyBLS.whenPressed(new RunLights(limelight, 3, 1));
-        sJoyBBR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunCenterOnLimelight(drivetrain, limelight)));
-        sJoyBTR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight)));
+        sJoyBBR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunCenterOnLimelight(drivetrain, limelight, 1)));
+        sJoyBTR.whileHeld(new RunLights(limelight, 3, 3).andThen(new RunTargetShooter(shooter, limelight, 1)));
         sJoyBTR.whenReleased(new ParallelRaceGroup(new RunTimer(0.25), new RunShooterWheels(shooter, 0, 0)));
         sJoyBBL.whileHeld(new RunTargetShooterSpeed(shooter, limelight));
         sJoyBBL.whenReleased(new ParallelRaceGroup(new RunTimer(0.25), new RunShooterWheels(shooter, 0, 0)));

@@ -32,6 +32,6 @@ public class RunShooterWheels extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return start == end;
     }
 }

@@ -51,10 +51,10 @@ public class Constants {
     public static final double SHOOTER_PIVOT_D = 0.0;
     public static final double SHOOTER_PIVOT_F = 0.0;
     //Shooter Velocity Based Motors PID
-    public static final double SHOOTER_VEL_P = 0.4;
+    public static final double SHOOTER_VEL_P = 0.4; //0.4;
     public static final double SHOOTER_VEL_I = 0.0;
-    public static final double SHOOTER_VEL_D = 0.05;
-    public static final double SHOOTER_VEL_F = 0.05;
+    public static final double SHOOTER_VEL_D = 0.05; //0.05;
+    public static final double SHOOTER_VEL_F = 0.05; //0.05;
     //Drive PID (Position???)
     public static final double driveP = 0.5;
     public static final double driveI = 0.0;

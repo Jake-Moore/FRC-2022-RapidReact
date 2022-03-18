@@ -10,14 +10,16 @@ import frc.robot.util.Target;
 public class RunCenterOnLimelight extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
+    private final int endLights;
     private final Notifier aimbotLoop;
 
     /**
-     * Finishes When Rotation is Within 0.5 Yaw
+     * Finishes When Rotation is Within 2.5 Yaw
      */
-    public RunCenterOnLimelight(Drivetrain drivetrain, Limelight limelight) {
+    public RunCenterOnLimelight(Drivetrain drivetrain, Limelight limelight, int endLights) {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
+        this.endLights = endLights;
 
         aimbotLoop = new Notifier(() -> {
             Target periodic = limelight.getTarget();
@@ -41,12 +43,12 @@ public class RunCenterOnLimelight extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         drivetrain.setOverrideDrivetrain(false);
-        limelight.setLights(1);
+        limelight.setLights(endLights);
         aimbotLoop.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(limelight.getTarget().yaw) <= 0.5);
+        return (limelight.hasTarget() && Math.abs(limelight.getTarget().yaw) <= 2.5);
     }
 }
