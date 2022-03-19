@@ -34,7 +34,7 @@ public class RunTargetShooter extends CommandBase {
 
         double[] speeds = shooter.getWheelSpeeds();
         //If wheelA and wheelB are within acceptable speed, and the angle is within accepted range, we are finished
-        finished = (Math.abs(speeds[0] - useSpeed) <= 25) && (Math.abs(speeds[1] - useSpeed) <= 25) && (Math.abs(shooter.getPivot() - angle) <= 100);
+        finished = (Math.abs(speeds[0] - useSpeed) <= 50) && (Math.abs(speeds[1] - useSpeed) <= 50) && (Math.abs(shooter.getPivot() - angle) <= 100);
     }
 
     @Override

@@ -136,7 +136,7 @@ public class RobotContainer {
         //-----END CLIMB-----//
 
         //Primary Controller Buttons//
-        joyBLeftJoystick.whileHeld(new RunLights(limelight, 3, 1)); //Lights
+        joyBLeftJoystick.whileHeld(new RunLights(limelight, 3, 3)); //Lights TODO make 3, 1
         joyBTL.whileHeld(new ParallelCommandGroup(
                 new RunShooterWheels(shooter, 4096, 0), //Intake Wheels
                 new RunShooterRollers(shooter, 0.5, 0) //Slightly Intake Rollers
@@ -207,7 +207,7 @@ public class RobotContainer {
         SmartDashboard.putNumber("Left Wheel Speed", wheelSpeeds[0]);
         SmartDashboard.putNumber("Right Wheel Speed", wheelSpeeds[1]);
         SmartDashboard.putNumber("Target Wheel Speed", targetWheelSpeed);
-        SmartDashboard.putBoolean("Wheels At Speed", Math.abs(wheelSpeeds[0] - targetWheelSpeed) <= 128 && Math.abs(wheelSpeeds[1] - targetWheelSpeed) <= 128);
+        SmartDashboard.putBoolean("Wheels At Speed", Math.abs(wheelSpeeds[0] - targetWheelSpeed) <= 50 && Math.abs(wheelSpeeds[1] - targetWheelSpeed) <= 50);
 
         SmartDashboard.putBoolean("Targets?", limelight.hasTarget());
         SmartDashboard.putNumber("Distance?", limelight.getDistance());
@@ -217,6 +217,10 @@ public class RobotContainer {
 
         SmartDashboard.putNumber("mLeftA", drivetrain.getDrivePos()[0]);
         SmartDashboard.putNumber("mRightA", drivetrain.getDrivePos()[1]);
+
+        if (limelight.hasTarget()) {
+            SmartDashboard.putNumber("Yaw", limelight.getTarget().yaw);
+        }
     }
 
     public double powAxis(double a, double b) {

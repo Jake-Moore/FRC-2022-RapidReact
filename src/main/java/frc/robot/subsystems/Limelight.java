@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
 
+import frc.robot.Constants;
 import frc.robot.util.Target;
 
 public class Limelight {
@@ -34,7 +35,7 @@ public class Limelight {
     private void update()
     {
         this.currentTarget.pitch = this.limelightTY.getDouble(0);
-        this.currentTarget.yaw   = this.limelightTX.getDouble(0);
+        this.currentTarget.yaw   = this.limelightTX.getDouble(0) + Constants.yawOffset;
         this.currentTarget.area  = this.limelightTA.getDouble(0);
     }
 

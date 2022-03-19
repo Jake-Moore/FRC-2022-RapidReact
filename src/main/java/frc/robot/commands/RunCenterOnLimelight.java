@@ -13,8 +13,10 @@ public class RunCenterOnLimelight extends CommandBase {
     private final int endLights;
     private final Notifier aimbotLoop;
 
+    private final double allowedYawError = 0.75;
+
     /**
-     * Finishes When Rotation is Within 2.5 Yaw
+     * Finishes When Rotation is Within 0.75 Yaw
      */
     public RunCenterOnLimelight(Drivetrain drivetrain, Limelight limelight, int endLights) {
         this.drivetrain = drivetrain;
@@ -23,19 +25,26 @@ public class RunCenterOnLimelight extends CommandBase {
 
         aimbotLoop = new Notifier(() -> {
             Target periodic = limelight.getTarget();
-            drivetrain.setRotation(drivetrain.getGyroRot()+3D + periodic.yaw);
-
-            SmartDashboard.putNumber("error%", Math.abs(periodic.yaw/drivetrain.getGyroRot()) * 100D);
+            if (Math.abs(periodic.yaw) > allowedYawError) {
+                drivetrain.setRotation(drivetrain.getGyroRot() + periodic.yaw);
+            }
         });
     }
 
+    int successes = 0;
+    int failures = 0;
+
     @Override
     public void initialize() {
+        successes = 0; failures = 0;
+
         drivetrain.setOverrideDrivetrain(true);
         limelight.setLights(3);
 
         Target initial = limelight.getTarget();
-        drivetrain.setRotation(drivetrain.getGyroRot() + initial.yaw);
+        if (Math.abs(initial.yaw) > allowedYawError) {
+            drivetrain.setRotation(drivetrain.getGyroRot() + initial.yaw);
+        }
 
         aimbotLoop.startPeriodic(0.5);
     }
@@ -49,6 +58,19 @@ public class RunCenterOnLimelight extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (limelight.hasTarget() && Math.abs(limelight.getTarget().yaw) <= 2.5);
+        if (limelight.hasTarget() && Math.abs(limelight.getTarget().yaw) <= allowedYawError) {
+            successes++;
+        }else {
+            failures++;
+        }
+        if (failures >= 10) {
+            successes = 0; failures = 0;
+        }
+        double percent = (successes + failures == 0) ? 0 : (successes / (double) (successes + failures));
+        SmartDashboard.putString("CenterRatio", successes + "s : " + failures + "f : " + percent + "%");
+        return successes >= 50 && (percent >= 0.8);
+
+        //Basically keep track of how many times we were successful and how many times we were not
+        // If we get too many failures then reset, and if we have enough with a good enough success rate, end
     }
 }
