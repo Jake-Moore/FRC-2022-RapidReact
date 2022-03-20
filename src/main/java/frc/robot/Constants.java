@@ -51,7 +51,7 @@ public class Constants {
     public static final double SHOOTER_PIVOT_D = 0.0;
     public static final double SHOOTER_PIVOT_F = 0.0;
     //Shooter Velocity Based Motors PID
-    public static final double SHOOTER_VEL_P = 0.4; //0.4;
+    public static final double SHOOTER_VEL_P = 0.45; //0.4;
     public static final double SHOOTER_VEL_I = 0.0;
     public static final double SHOOTER_VEL_D = 0.05; //0.05;
     public static final double SHOOTER_VEL_F = 0.05; //0.05;
@@ -63,5 +63,5 @@ public class Constants {
     public static final double driveMaxPowerAuto = 0.225;
     public static final double driveMaxPowerTeleop = 1;
 
-    public static final double yawOffset = 4; //OOF
+    public static final double yawOffset = 0; //OOF
 }

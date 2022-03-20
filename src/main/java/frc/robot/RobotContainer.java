@@ -232,7 +232,7 @@ public class RobotContainer {
     }
 
     public void init() {
-        climbArms.setPivotPos(0);
+        climbArms.setPivotPos(3000);
         climbArms.setBrake(90, 90);
     }
 
