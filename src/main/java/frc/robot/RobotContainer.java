@@ -86,15 +86,64 @@ public class RobotContainer {
         //-----START CLIMB-----//
         joyBShare.whileHeld(new RequireButton(new ParallelCommandGroup(
                 new RunStraightRopePosAdj(climbArms, 20000),
-                new RunShooterPivot(shooter, -4000),
+                new RunShooterPivot(shooter, -6250),
                 new RunBrake(climbArms, 90, 90)
-        ), joyBPS));
-        joyBBig.whileHeld(new RequireButton(new RunPivotPos(climbArms, -2500), joyBPS));
+            ).andThen(new RunPivotPos(climbArms, -29500, 0.15))
+        , joyBPS));
         joyBOptions.whileHeld(new RequireButton(new ParallelCommandGroup(
                 new RunStraightRopePos(climbArms, 0),
-                new RunPivotRopePos(climbArms, 240000)
+                new RunPivotRopePos(climbArms, 231250)
         ), joyBPS));
-        joyBTriangle.whileHeld(new RequireButton(new RunPivotPosAdj(climbArms, -500), joyBPS));
+        joyBTriangle.whileHeld(new RequireButton(new RunPivotPosAdj(climbArms, 1000), joyBPS));
+
+        joyBCircle.whenPressed(new RequireButton(
+                new ParallelCommandGroup(
+                        //new RunClimbPivotPIDToggle(climbArms, false),
+                        new RunStraightRopePos(climbArms, 175000)//,
+                        //new RunPivotRopePos(climbArms, 131250)//,
+                        //new RunPivotPos(climbArms, 15000)
+                        //new RunPivotRopePos(climbArms, 0)
+                )//.andThen(new RunStraightRopePos(climbArms, 0))
+                .andThen(new RunPivotPos(climbArms, -29000, 0.5))
+                .andThen(new ParallelCommandGroup(
+                        new RunStraightRopePos(climbArms, 230000),
+                        new RunPivotRopePosAdj(climbArms, -100000)
+                )).andThen(new RunStraightRopePos(climbArms, 0))
+                .andThen(new RunPivotPos(climbArms, 7000, 0.5))
+                .andThen(new ParallelCommandGroup(
+                        new RunStraightRopePos(climbArms, 75000),
+                        new RunPivotRopePos(climbArms, 0)
+                )).andThen(new RunPivotPos(climbArms, -1000, 0.5))
+
+
+                /*
+                .andThen(new ParallelCommandGroup(
+                        new RunStraightRopePos(climbArms, 0),
+                        new RunPivotRopePos(climbArms, 50000)
+                ))
+                */
+
+                /*
+                ).andThen(new ParallelCommandGroup(
+                        new RunPivotRopePos(climbArms, 50000),
+                        new RunStraightRopePos(climbArms, 0)
+                )).andThen(new RunPivotPos(climbArms, 9000)
+                ).andThen(new ParallelCommandGroup(
+                        new RunStraightRopePos(climbArms, 100000),
+                        new RunPivotRopePos(climbArms, 0)
+                )).andThen(new RunPivotPos(climbArms, 3250)
+                ).andThen(new RunStraightRopePos(climbArms, 0)
+                ).andThen(new RunPivotRopePos(climbArms, 50000)
+                ).andThen(new RunPivotPos(climbArms, 7000)
+                ).andThen(new ParallelCommandGroup(
+                        new RunStraightRopePos(climbArms, 60000),
+                        new RunPivotRopePos(climbArms, 0)
+                )).andThen(new RunPivotPos(climbArms, -2500))*/
+        , joyBPS));
+
+
+
+        /*
         joyBCircle.whenPressed(new RequireButton(
                 new ParallelCommandGroup(
                         new RunStraightRopePos(climbArms, 100000),
@@ -131,6 +180,7 @@ public class RobotContainer {
                 .andThen(new RunPivotRopePos(climbArms, 0))
                 .andThen(new RunBrake(climbArms, 60, 115))
         );
+        */
 
         joyBRightJoystick.whenPressed(new RequireButton(new RunBrake(climbArms, 60, 115), joyBPS));
         //-----END CLIMB-----//
@@ -151,11 +201,12 @@ public class RobotContainer {
         joyBBL.whenReleased(new RunLights(limelight, 1, 1).andThen(new RunShooterWheels(shooter, 0, 0)));
         joyBTR.whileHeld(new RunShooterPivot(shooter, -55500)); //Set Pivot to intake
         joyBBR.whileHeld(new RunShooterPivot(shooter, -6500)); //Set Pivot to stow
-        joyPOVW.whenPressed(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh-Shit Button
+        joyPOVW.whileHeld(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh-Shit Button
                 new ParallelCommandGroup(
                         new RunStraightRopePos(climbArms, 0),
                         new RunPivotRopePos(climbArms, 0)
-                ).andThen(new RunPivotPos(climbArms, 0))
+                ).andThen(new RunClimbPivotPIDToggle(climbArms, true)
+                ).andThen(new RunPivotPos(climbArms, 0, 0.15))
         ), joyBPS));
         joyPOVN.whileHeld(new ParallelCommandGroup(
                 new RunShooterWheels(shooter, -8192, 0),
@@ -232,7 +283,7 @@ public class RobotContainer {
     }
 
     public void init() {
-        climbArms.setPivotPos(3000);
+        climbArms.setPivotPos(0);
         climbArms.setBrake(90, 90);
     }
 

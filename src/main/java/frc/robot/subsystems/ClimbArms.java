@@ -33,10 +33,10 @@ public class ClimbArms extends SubsystemBase {
     //Create the motors, invert a couple, help hold them in place, and zero encoders
     public ClimbArms() {
         //Rope Motors
-        mLeftStraight  = setupClimbFalcon(Constants.climbLeftStraightID,  false, ropePID);
-        mLeftPivot     = setupClimbFalcon(Constants.climbLeftPivotID,     true, ropePID);
-        mRightStraight = setupClimbFalcon(Constants.climbRightStraightID, true , ropePID);
-        mRightPivot    = setupClimbFalcon(Constants.climbRightPivotID,    false , ropePID);
+        mLeftStraight  = setupClimbFalcon(Constants.climbLeftStraightID,  true, ropePID);
+        mLeftPivot     = setupClimbFalcon(Constants.climbLeftPivotID,     false, ropePID);
+        mRightStraight = setupClimbFalcon(Constants.climbRightStraightID, false , ropePID);
+        mRightPivot    = setupClimbFalcon(Constants.climbRightPivotID,    true , ropePID);
 
         //Pivot Motor
         mPivoter       = setupClimbFalcon(Constants.climbPivotID,       false, pivotPID);
@@ -74,8 +74,17 @@ public class ClimbArms extends SubsystemBase {
 
         talon.configNominalOutputForward(0, Constants.TIMEOUT_MS);
         talon.configNominalOutputReverse(0, Constants.TIMEOUT_MS);
-        talon.configPeakOutputForward(pid.maxPower, Constants.TIMEOUT_MS);
-        talon.configPeakOutputReverse(-pid.maxPower, Constants.TIMEOUT_MS);
+        if (id == Constants.climbLeftPivotID) {
+            talon.configPeakOutputForward(pid.maxPower * Constants.leftPivotRopeMotorScalar, Constants.TIMEOUT_MS);
+            talon.configPeakOutputReverse(-pid.maxPower * Constants.leftPivotRopeMotorScalar, Constants.TIMEOUT_MS);
+        }else if (id == Constants.climbLeftStraightID) {
+            talon.configPeakOutputForward(pid.maxPower * Constants.leftStraightRopeMotorScalar, Constants.TIMEOUT_MS);
+            talon.configPeakOutputReverse(-pid.maxPower * Constants.leftStraightRopeMotorScalar, Constants.TIMEOUT_MS);
+        }else {
+            talon.configPeakOutputForward(pid.maxPower, Constants.TIMEOUT_MS);
+            talon.configPeakOutputReverse(-pid.maxPower, Constants.TIMEOUT_MS);
+        }
+
         talon.configAllowableClosedloopError(Constants.PID_LOOP_IDX, pid.allowedError, Constants.TIMEOUT_MS);
 
         talon.config_kP(Constants.PID_LOOP_IDX, pid.kP, Constants.TIMEOUT_MS);
@@ -89,8 +98,26 @@ public class ClimbArms extends SubsystemBase {
         return talon;
     }
 
+    public void setPivotMaxPower(double maxPower) {
+        mPivoter.configPeakOutputForward(maxPower, Constants.TIMEOUT_MS);
+        mPivoter.configPeakOutputReverse(-maxPower, Constants.TIMEOUT_MS);
+    }
+
+    public void setPivotPIDEnabled(boolean enabled) {
+        //Safety as to not kill the robot trying to get somewhere after re-enabling
+        if (enabled) {
+            mPivoter.set(TalonFXControlMode.Position, mPivoter.getSelectedSensorPosition());
+        }
+
+        PID pid = (enabled) ? new PID(0,0 ,0 ,0 ,0, 0) : pivotPID;
+        mPivoter.config_kP(Constants.PID_LOOP_IDX, pid.kP);
+        mPivoter.config_kP(Constants.PID_LOOP_IDX, pid.kI);
+        mPivoter.config_kP(Constants.PID_LOOP_IDX, pid.kD);
+        mPivoter.config_kP(Constants.PID_LOOP_IDX, pid.kF);
+    }
+
     public void setStraightArmsPos(double pos) {
-        mLeftStraight.set(TalonFXControlMode.Position, pos);
+        mLeftStraight.set(TalonFXControlMode.Position, pos * Constants.leftStraightRopeMotorScalar);
         mRightStraight.set(TalonFXControlMode.Position, pos);
     }
     public double getStraightArmsPos() {
@@ -98,7 +125,7 @@ public class ClimbArms extends SubsystemBase {
     }
 
     public void setPivotArmsPos(double pos) {
-        mLeftPivot.set(TalonFXControlMode.Position, pos);
+        mLeftPivot.set(TalonFXControlMode.Position, pos * Constants.leftPivotRopeMotorScalar); //Scuffed non-matching movement scalar
         mRightPivot.set(TalonFXControlMode.Position, pos);
     }
     //Returns the internal falcon position for the pivoter

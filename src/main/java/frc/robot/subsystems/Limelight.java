@@ -54,7 +54,7 @@ public class Limelight {
 
     public double getDistance() {
         double goalHeight = 8*12 + 8;
-        double camHeight = 35.5;
+        double camHeight = 36.625;
         double camAngle = 35;
 
         double pitch = currentTarget.pitch + camAngle;

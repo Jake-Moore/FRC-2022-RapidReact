@@ -19,10 +19,10 @@ public class Constants {
     public static final int rollerBID = 14;
 
 
-    public static final int climbLeftStraightID = 6;
-    public static final int climbLeftPivotID = 5;
-    public static final int climbRightPivotID = 7;
-    public static final int climbRightStraightID = 8;
+    public static final int climbLeftStraightID = 8;
+    public static final int climbLeftPivotID = 7;
+    public static final int climbRightPivotID = 5;
+    public static final int climbRightStraightID = 6;
     public static final int climbPivotID = 9;
 
     //Servos
@@ -36,7 +36,7 @@ public class Constants {
     public static final int PID_LOOP_IDX = 0;
     public static final int TIMEOUT_MS = 30;
     //Rope Motors PID
-    public static final double ROPE_P = 0.15;
+    public static final double ROPE_P = 0.3;
     public static final double ROPE_I = 0.0;
     public static final double ROPE_D = 0.0;
     public static final double ROPE_F = 0.0;
@@ -64,4 +64,6 @@ public class Constants {
     public static final double driveMaxPowerTeleop = 1;
 
     public static final double yawOffset = 0; //OOF
+    public static final double leftPivotRopeMotorScalar = 1.045;
+    public static final double leftStraightRopeMotorScalar = 1D; //1.025;
 }
