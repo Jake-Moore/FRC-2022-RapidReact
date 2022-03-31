@@ -25,6 +25,6 @@ public class RunStraightRopePos extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(climbArms.getStraightArmsPos() - pos) <= 1000);
+        return climbArms.straightArmsAtTarget();
     }
 }

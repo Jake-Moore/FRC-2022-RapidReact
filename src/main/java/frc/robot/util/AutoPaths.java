@@ -27,6 +27,22 @@ public class AutoPaths {
 
         trajs.add(
             new NamedCommand(
+                "Rotate Test 180",
+
+                new RunRotateBot(drivetrain, 180, true)
+            )
+        );
+
+        trajs.add(
+            new NamedCommand(
+                "Rotate Test 90",
+
+                new RunRotateBot(drivetrain, 90, true)
+            )
+        );
+
+        trajs.add(
+            new NamedCommand(
                 "Taxi Back + 1 Ball Forward",
 
                 new RunDrivePos(drivetrain, -getTicksFromDist(45), -getTicksFromDist(45))
@@ -60,7 +76,7 @@ public class AutoPaths {
                 ))
                 .andThen(new ParallelRaceGroup(
                     new RunTimer(3),
-                    new RunRotateBot(drivetrain, 180)
+                    new RunRotateBot(drivetrain, 180, true)
                 )).andThen(new ParallelRaceGroup(
                     new RunTimer(1.5),
                     new RunCenterOnLimelight(drivetrain, limelight, 1)

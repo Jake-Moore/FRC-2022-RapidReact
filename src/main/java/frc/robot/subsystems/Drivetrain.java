@@ -6,7 +6,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -44,6 +43,8 @@ public class Drivetrain extends SubsystemBase {
         mLeftB.setInverted(true);
         mRightA.setInverted(false);
         mRightB.setInverted(false);
+
+        setOutputs(1.0);
 
         mLeftB.follow(mLeftA);
         mRightB.follow(mRightA);
@@ -83,6 +84,16 @@ public class Drivetrain extends SubsystemBase {
         mRightA.set(ControlMode.Position, mRightA.getSelectedSensorPosition()+delta);
     }
 
+    public void setOutputs(double output) {
+        TalonFX[] talons = {mLeftA, mLeftB, mRightA, mRightB};
+        for (TalonFX talonFX : talons) {
+            talonFX.configNominalOutputForward(0, Constants.TIMEOUT_MS);
+            talonFX.configNominalOutputReverse(0, Constants.TIMEOUT_MS);
+            talonFX.configPeakOutputForward(output, Constants.TIMEOUT_MS);
+            talonFX.configPeakOutputReverse(-output, Constants.TIMEOUT_MS);
+        }
+    }
+
     //Drive Modes
     public void driveFromJoysticks(double zoom, double nyoom) {
         if (overrideDrivetrain) { return; }
@@ -114,7 +125,6 @@ public class Drivetrain extends SubsystemBase {
     public void zeroGyro() {
         gyro.reset();
     }
-
 
     public double getDeltaTargetPos(double targetAngle) {
         double currAngle = getGyroRot();

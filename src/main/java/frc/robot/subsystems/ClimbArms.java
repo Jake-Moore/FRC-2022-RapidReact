@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.PID;
@@ -27,7 +28,7 @@ public class ClimbArms extends SubsystemBase {
     public final Servo brakeR;
 
     //PID Sets
-    public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 64, 0.5);
+    public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 64, 0.7);
     public final PID pivotPID = new PID(Constants.CLIMB_PIVOT_P, Constants.CLIMB_PIVOT_I, Constants.CLIMB_PIVOT_D, Constants.CLIMB_PIVOT_F, 128, 0.5);
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
@@ -116,30 +117,46 @@ public class ClimbArms extends SubsystemBase {
         mPivoter.config_kP(Constants.PID_LOOP_IDX, pid.kF);
     }
 
+    private double straightArmsTarget = 0;
     public void setStraightArmsPos(double pos) {
+        straightArmsTarget = pos;
         mLeftStraight.set(TalonFXControlMode.Position, pos * Constants.leftStraightRopeMotorScalar);
         mRightStraight.set(TalonFXControlMode.Position, pos);
     }
+    public boolean straightArmsAtTarget() {
+        boolean left = Math.abs(mLeftStraight.getSelectedSensorPosition() - (straightArmsTarget*Constants.leftStraightRopeMotorScalar)) <= 1000;
+        boolean right = Math.abs(mRightStraight.getSelectedSensorPosition() - straightArmsTarget) <= 1000;
+        return left && right;
+    }
+    //use with salt, there are offsets applied during the set methods of this class that need to be considered
     public double getStraightArmsPos() {
         return Math.min(mLeftStraight.getSelectedSensorPosition(), mRightStraight.getSelectedSensorPosition());
     }
 
+    double pivotArmsTarget = 0;
     public void setPivotArmsPos(double pos) {
+        pivotArmsTarget = pos;
         mLeftPivot.set(TalonFXControlMode.Position, pos * Constants.leftPivotRopeMotorScalar); //Scuffed non-matching movement scalar
         mRightPivot.set(TalonFXControlMode.Position, pos);
     }
-    //Returns the internal falcon position for the pivoter
+    public boolean pivotArmsAtTarget() {
+        boolean left = Math.abs(mLeftPivot.getSelectedSensorPosition() - (pivotArmsTarget*Constants.leftPivotRopeMotorScalar)) <= 1000;
+        boolean right = Math.abs(mRightPivot.getSelectedSensorPosition() - pivotArmsTarget) <= 1000;
+        return left && right;
+    }
+    //use with salt, there are offsets applied during the set methods of this class that need to be considered
     public double getPivotArmsPos() {
         return Math.min(mLeftPivot.getSelectedSensorPosition(), mRightPivot.getSelectedSensorPosition());
     }
+
     //Returns the angle (to one decimal) of the pivot arm
     public double getPivotAbsolutePos() {
         return ((int) Math.round(pivotEncoder.getAverageValue() * 360D/269.4))/10D;
     }
 
-
     public void setPivotPos(double pos) {
         mPivoter.set(TalonFXControlMode.Position, pos);
+        //SmartDashboard.putNumber("Pivot Target", pos);
     }
     public double getPivotPos() {
         return mPivoter.getSelectedSensorPosition();

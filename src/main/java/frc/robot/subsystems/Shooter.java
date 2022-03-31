@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.PID;
+import frc.robot.util.calibration.ShooterAngle;
+import frc.robot.util.calibration.ShooterSpeed;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,7 +28,7 @@ public class Shooter extends SubsystemBase {
     public final AnalogInput pivotEncoder = new AnalogInput(1);
 
     //PIDs
-    private final PID pivotPID = new PID(Constants.SHOOTER_PIVOT_P, Constants.SHOOTER_PIVOT_I, Constants.SHOOTER_PIVOT_D, Constants.SHOOTER_PIVOT_F, 32, 0.2);
+    private final PID pivotPID = new PID(Constants.SHOOTER_PIVOT_P, Constants.SHOOTER_PIVOT_I, Constants.SHOOTER_PIVOT_D, Constants.SHOOTER_PIVOT_F, 16, 0.2);
     private final PID wheelPID = new PID(Constants.SHOOTER_VEL_P, Constants.SHOOTER_VEL_I, Constants.SHOOTER_VEL_D, Constants.SHOOTER_VEL_F, 0, 1.0);
     private final PID rollerPID = new PID(0, 0, 0 , 0, 0, 1);
 
@@ -119,6 +121,7 @@ public class Shooter extends SubsystemBase {
     public void setPivot(double pos) {
         mPivoter.set(TalonFXControlMode.Position, pos);
         pivot = pos;
+        SmartDashboard.putNumber("ShooterPivotTarget", pos);
     }
     public double getPivotTargetPos() {
         return pivot;
@@ -134,13 +137,32 @@ public class Shooter extends SubsystemBase {
 
     // less than 45 limelight can't find target
     public double getIdealSpeed(double distance) {
-        if (distance <= 45 || distance >= 250) { return -1; }
-        return (1 + Math.pow(distance/200, 2)*0.11)*(-Math.pow(1.00941, distance+640) - 5793.4);
+        if (distance <= 45) { return -1; }
+        //return (1 + Math.pow(distance/200, 2)*0.11)*(-Math.pow(1.00941, distance+640) - 5793.4);
+        //return 1591.09*(-0.125016*Math.pow(distance, -0.0704244) + -0.00000601795*Math.pow(distance, 2.58453)
+        //        + 0.0023656*distance - 4.0012) + -7.5817*Math.pow(10, -21)*Math.pow(distance, 10.035)
+        //        + 0.0000183205*Math.pow(distance, 3.7232) + 0.089*distance + 5;
+
+        return ShooterSpeed.get(distance);
     }
 
     public double getIdealAngle(double distance) {
-        if (distance <= 45 || distance >= 250) { return 401; }
-        return -11533.2 * Math.log10(distance - 38) + 8772.51;
+        if (distance <= 45) { return 401; }
+        //return -11533.2 * Math.log10(distance - 38) + 8772.51;
+        /*
+        return 0.364171*(265.955*Math.cos(0.103881*distance) + 333.07*Math.cos(0.191989*distance) +
+                -1.3034*Math.pow(10, 9)*Math.pow(distance, -61.8956) +
+                2.8727*Math.pow(10, 14)*Math.pow(distance, 1.00006) +
+                1.4892*Math.pow(10, 14)*Math.pow(distance, 0.999877) +
+                2.55*Math.pow(10, 13)*distance + 1.5436*Math.pow(10, 6))
+                + 1.7968*Math.pow(10, 6)*Math.cos(distance*0.0133903) + -353.163*Math.cos(distance*0.126278) +
+                9.3986*Math.pow(10, 7)*Math.pow(distance, -1.08386) +
+                -2.1045*Math.pow(10, 7)*Math.pow(distance, 1.15796) + -1.6813*Math.pow(10, 14)*distance +
+                -2.1834*Math.pow(10, 7);
+
+        */
+        //return -71.8421*distance - 1031.05;
+        return ShooterAngle.get(distance);
     }
 
     public void targetShooter(double angle, double speed) {

@@ -1,8 +1,8 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Limelight;
 import frc.robot.util.Target;
@@ -11,9 +11,7 @@ public class RunCenterOnLimelight extends CommandBase {
     private final Drivetrain drivetrain;
     private final Limelight limelight;
     private final int endLights;
-    private final Notifier aimbotLoop;
-
-    private final double allowedYawError = 0.75;
+    private RunRotateBot runRotateBot = null;
 
     /**
      * Finishes When Rotation is Within 0.75 Yaw
@@ -22,13 +20,6 @@ public class RunCenterOnLimelight extends CommandBase {
         this.drivetrain = drivetrain;
         this.limelight = limelight;
         this.endLights = endLights;
-
-        aimbotLoop = new Notifier(() -> {
-            Target periodic = limelight.getTarget();
-            if (Math.abs(periodic.yaw) > allowedYawError) {
-                drivetrain.setRotation(drivetrain.getGyroRot() + periodic.yaw);
-            }
-        });
     }
 
     int successes = 0;
@@ -36,29 +27,34 @@ public class RunCenterOnLimelight extends CommandBase {
 
     @Override
     public void initialize() {
+        runRotateBot = null;
         successes = 0; failures = 0;
 
         drivetrain.setOverrideDrivetrain(true);
         limelight.setLights(3);
+    }
 
-        Target initial = limelight.getTarget();
-        if (Math.abs(initial.yaw) > allowedYawError) {
-            drivetrain.setRotation(drivetrain.getGyroRot() + initial.yaw);
+    @Override
+    public void execute() {
+        Target periodic = limelight.getTarget();
+        if (!limelight.hasTarget() || Math.abs(periodic.yaw) <= Constants.allowedYawError) { return; }
+        if (runRotateBot == null || runRotateBot.isFinished()) {
+            if (runRotateBot != null) { runRotateBot.end(true); }
+            runRotateBot = new RunRotateBot(drivetrain, periodic.yaw, false);
+            runRotateBot.initialize();
         }
-
-        aimbotLoop.startPeriodic(0.5);
     }
 
     @Override
     public void end(boolean interrupted) {
         drivetrain.setOverrideDrivetrain(false);
         limelight.setLights(endLights);
-        aimbotLoop.stop();
+        if (runRotateBot != null) { runRotateBot.end(true); }
     }
 
     @Override
     public boolean isFinished() {
-        if (limelight.hasTarget() && Math.abs(limelight.getTarget().yaw) <= allowedYawError) {
+        if (limelight.hasTarget() && Math.abs(limelight.getTarget().yaw) <= Constants.allowedYawError) {
             successes++;
         }else {
             failures++;

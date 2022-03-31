@@ -46,7 +46,7 @@ public class Constants {
     public static final double CLIMB_PIVOT_D = 0.0;
     public static final double CLIMB_PIVOT_F = 0.0;
     //Shooter Pivot Motor PID
-    public static final double SHOOTER_PIVOT_P = 0.3;
+    public static final double SHOOTER_PIVOT_P = 0.6;
     public static final double SHOOTER_PIVOT_I = 0.0;
     public static final double SHOOTER_PIVOT_D = 0.0;
     public static final double SHOOTER_PIVOT_F = 0.0;
@@ -64,6 +64,8 @@ public class Constants {
     public static final double driveMaxPowerTeleop = 1;
 
     public static final double yawOffset = 0; //OOF
-    public static final double leftPivotRopeMotorScalar = 1.045;
-    public static final double leftStraightRopeMotorScalar = 1D; //1.025;
+    public static final double leftPivotRopeMotorScalar = 1D;
+    public static final double leftStraightRopeMotorScalar = 0.966D; //1.025, 0.966
+
+    public static final double allowedYawError = 1.0;
 }

@@ -19,6 +19,12 @@ public class RunTargetShooter extends CommandBase {
         this.endLights = endLights;
     }
 
+    int successes = 0;
+    @Override
+    public void initialize() {
+        successes = 0;
+    }
+
     boolean finished = false;
     double prevSpeed = 0;
     @Override
@@ -46,6 +52,7 @@ public class RunTargetShooter extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return finished;
+        if (finished) { successes++; }
+        return successes >= 10;
     }
 }
