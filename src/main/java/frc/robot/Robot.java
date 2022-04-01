@@ -21,7 +21,9 @@ import java.util.HashMap;
  */
 public class Robot extends TimedRobot {
     private RobotContainer kRobotContainer;
-    private final SendableChooser<String> kChooser = new SendableChooser<>();
+    private final SendableChooser<String> autoChooser = new SendableChooser<>();
+    private final SendableChooser<Double> speedChooser = new SendableChooser<>();
+
     private final HashMap<String, @Nullable NamedCommand> paths = new HashMap<>();
 
     /**
@@ -31,20 +33,23 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         //House Keeping
-        kRobotContainer = new RobotContainer();
+        kRobotContainer = new RobotContainer(speedChooser);
         kRobotContainer.limelight.setLights(1);
         kRobotContainer.shooter.calibrate();
 
         //Auto Paths
-        kChooser.setDefaultOption("None", null);
+        autoChooser.setDefaultOption("None", null);
+        speedChooser.setDefaultOption("Normal", 0.65);
+        speedChooser.addOption("Demon", 1.0);
         paths.put("None", null);
 
         for (NamedCommand nc : kRobotContainer.ap.trajs) {
             paths.put(nc.getName(), nc);
-            kChooser.addOption(nc.getName(), nc.getName());
+            autoChooser.addOption(nc.getName(), nc.getName());
         }
 
-        SmartDashboard.putData(kChooser);
+        SmartDashboard.putData(autoChooser);
+        SmartDashboard.putData(speedChooser);
     }
 
     /**
@@ -81,7 +86,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         kRobotContainer.drivetrain.setDriveMaxPower(Constants.driveMaxPowerAuto);
-        NamedCommand command = paths.get(kChooser.getSelected());
+        NamedCommand command = paths.get(autoChooser.getSelected());
         if (command != null) {
             command.getCommand().schedule();
         }

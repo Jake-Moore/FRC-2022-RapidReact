@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -12,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.util.*;
-import frc.robot.util.calibration.ShooterAngle;
 
 @SuppressWarnings("unused")
 public class RobotContainer {
@@ -22,6 +22,7 @@ public class RobotContainer {
     public final Shooter shooter = new Shooter();
     public final Limelight limelight = new Limelight();
     public final Cameras cameras = new Cameras();
+    public final SendableChooser<Double> speedChooser;
 
     public AutoPaths ap = new AutoPaths(climbArms, drivetrain, shooter, limelight);
 
@@ -66,8 +67,9 @@ public class RobotContainer {
     private final POVButton sJoyPOVS = new POVButton(sJoy, 180); //South
 
 
-    public RobotContainer() {
+    public RobotContainer(SendableChooser<Double> speedChooser) {
         configureButtonBindings();
+        this.speedChooser = speedChooser;
     }
 
     /**
@@ -81,7 +83,7 @@ public class RobotContainer {
 
         //Drivetrain
         drivetrain.setDefaultCommand(new RunCommand(() ->
-                drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * 0.65D, pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
+                drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * getSpeedFactor(), pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
         ));
 
         //-----START CLIMB-----//
@@ -199,6 +201,10 @@ public class RobotContainer {
         //sJoyBTL.whenPressed(new RunPressedTest());
         //sJoyBTL.whileHeld(new RunWhileHeldTest());
         //sJoyBTL.whenReleased(new RunReleasedTest());
+    }
+
+    private double getSpeedFactor() {
+        return speedChooser.getSelected();
     }
 
     public void updateSmartDashboard() {
