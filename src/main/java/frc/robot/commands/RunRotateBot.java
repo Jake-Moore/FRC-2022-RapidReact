@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -20,12 +21,17 @@ public class RunRotateBot extends CommandBase {
         this.deltaDegrees = deltaDegrees;
         this.preciseIsFinished = preciseIsFinished;
 
-        aimbotLoop = new Notifier(() -> drivetrain.setRotation(target));
+        aimbotLoop = new Notifier(() -> {
+            if (gyroBroke) { return; }
+            drivetrain.setRotation(target);
+            gyroBroke = drivetrain.getGyroRot() == -0D;
+        });
     }
 
     int successes = 0;
     int failures = 0;
 
+    private boolean gyroBroke = false;
     @Override
     public void initialize() {
         successes = 0; failures = 0;
@@ -35,6 +41,7 @@ public class RunRotateBot extends CommandBase {
         target = drivetrain.getGyroRot() + deltaDegrees;
         drivetrain.setRotation(target);
         aimbotLoop.startPeriodic(1);
+        gyroBroke = drivetrain.getGyroRot() == -0D;
     }
 
     @Override

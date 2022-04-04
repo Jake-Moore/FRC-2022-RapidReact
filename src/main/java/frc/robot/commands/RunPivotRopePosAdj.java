@@ -8,25 +8,23 @@ public class RunPivotRopePosAdj extends CommandBase {
     private final double adj;
 
     /**
-     * Finishes When Pivot Arm Pos is Within 1,000 ticks
+     * Finishes Immediately
      */
     public RunPivotRopePosAdj(ClimbArms climbArms, double adj) {
         this.climbArms = climbArms;
         this.adj = adj;
     }
 
-    double target = Double.MAX_VALUE;
     @Override
     public void initialize() {
-        target = climbArms.mLeftPivot.getSelectedSensorPosition() + adj;
-        climbArms.setPivotArmsPos(target);
+        climbArms.setPivotArmsPos(Math.max(0, Math.min(climbArms.mLeftPivot.getSelectedSensorPosition() + adj, 230000)));
     }
 
     @Override
-    public void execute() { }
+    public void execute() {}
 
     @Override
     public boolean isFinished() {
-        return climbArms.pivotArmsAtTarget();
+        return true;//climbArms.pivotArmsAtTarget();
     }
 }
