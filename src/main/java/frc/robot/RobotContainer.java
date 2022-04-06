@@ -105,8 +105,6 @@ public class RobotContainer {
 
         sJoyBA.whenPressed(new RequireButton(new RunStraightRopePosAdj(climbArms, -20000, 0.7), sJoyBBack));
 
-        //joyBShare.whenReleased(new RequireButton(new RunPivotPos(climbArms, -29500, 0.15), joyBPS));
-
         joyBBig.whenPressed(new RequireButton(
                 new ParallelCommandGroup(
                         new RunTimer(0.5),
@@ -122,7 +120,7 @@ public class RobotContainer {
                 new RunPivotRopePos(climbArms, 240000)
             )
         , joyBPS));
-        joyBTriangle.whileHeld(new RequireButton(new RunPivotPos(climbArms, 17000, 0.15), joyBPS));
+        joyBTriangle.whenPressed(new RequireButton(new RunPivotPos(climbArms, 17000, 0.15), joyBPS));
         joyBCircle.whenPressed(new RequireButton(
             new RunPivotRopePos(climbArms, 207000)
             .andThen(new ParallelCommandGroup(
@@ -138,7 +136,7 @@ public class RobotContainer {
                     new RunStraightRopePos(climbArms, 75000, 0.7)
             )).andThen(new RunBrake(climbArms, 60, 115))
             .andThen(new RunPivotPos(climbArms, 0, 0.3)) //Using smooth class freaks out
-            .andThen(new RunStraightRopePos(climbArms, 20000, 0.7))
+            .andThen(new RunStraightRopePos(climbArms, 17000, 0.7))
             .andThen(new RunShooterPivot(shooter, 8000))
         , joyBPS));
 
