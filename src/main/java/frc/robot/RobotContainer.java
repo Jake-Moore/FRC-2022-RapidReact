@@ -65,7 +65,8 @@ public class RobotContainer {
 
     private final POVButton sJoyPOVN = new POVButton(sJoy, 0); //North
     private final POVButton sJoyPOVS = new POVButton(sJoy, 180); //South
-
+    private final POVButton sJoyPOVW = new POVButton(sJoy, 270); //North
+    private final POVButton sJoyPOVE = new POVButton(sJoy, 90); //South
 
     public RobotContainer(SendableChooser<Double> speedChooser) {
         configureButtonBindings();
@@ -87,12 +88,23 @@ public class RobotContainer {
         ));
 
         //-----START CLIMB-----//
-        joyBShare.whileHeld(new RequireButton(new RunStraightRopePosAdj(climbArms, 20000), joyBPS));
+
+        //KEEP THESE COMMANDS THE SAME AS pJoyBY !!!
+        joyBShare.whileHeld(new RequireButton(new RunStraightRopePosAdj(climbArms, 20000, 0.7), joyBPS));
         joyBShare.whileHeld(new RequireButton(new ParallelCommandGroup(
                 new RunShooterPivot(shooter, -6250),
                 new RunBrake(climbArms, 90, 90)
-            ).andThen(new RunPivotPos(climbArms, -24000, 0.15))
+            ).andThen(new RunPivotPos(climbArms, 6000, 0.15))
         , joyBPS));
+        sJoyBY.whileHeld(new RequireButton(new RunStraightRopePosAdj(climbArms, 20000, 0.7), sJoyBBack));
+        sJoyBY.whileHeld(new RequireButton(new ParallelCommandGroup(
+                new RunShooterPivot(shooter, -6250),
+                new RunBrake(climbArms, 90, 90)
+            ).andThen(new RunPivotPos(climbArms, 6000, 0.15))
+        , sJoyBBack));
+
+        sJoyBA.whenPressed(new RequireButton(new RunStraightRopePosAdj(climbArms, -20000, 0.7), sJoyBBack));
+
         //joyBShare.whenReleased(new RequireButton(new RunPivotPos(climbArms, -29500, 0.15), joyBPS));
 
         joyBBig.whenPressed(new RequireButton(
@@ -101,38 +113,57 @@ public class RobotContainer {
                         new RunBrake(climbArms, 90, 90),
                         new RunShooterPivot(shooter, -6250)
                 ).andThen(new RunPivotRopePos(climbArms, 75000))
-                .andThen(new RunPivotPos(climbArms, -24000, 0.15))
+                .andThen(new RunPivotPos(climbArms, 6000, 0.15))
         , joyBPS));
 
-        joyBOptions.whileHeld(new RequireButton(new ParallelCommandGroup(
-                new RunStraightRopePos(climbArms, 0),
-                new RunPivotRopePos(climbArms, 261500)
-        ), joyBPS));
-        joyBTriangle.whileHeld(new RequireButton(new RunPivotPosAdj(climbArms, 1000), joyBPS));
+        joyBOptions.whileHeld(new RequireButton(
+            new ParallelCommandGroup(
+                new RunStraightRopePos(climbArms, 0, 0.7),
+                new RunPivotRopePos(climbArms, 240000)
+            ).andThen(new RunSmoothPivotPos(climbArms, 19000, 0.15, 250))
+        , joyBPS));
+        joyBTriangle.whileHeld(new RequireButton(new RunPivotPosAdj(climbArms, -1000), joyBPS));
         joyBCircle.whenPressed(new RequireButton(
-                new RunPivotRopePos(climbArms, 210000)
-                .andThen(new RunPivotPos(climbArms, -24000, 0.5))
-                .andThen(new RunStraightRopePos(climbArms, 230000))
+            new ParallelCommandGroup(
+                new RunStraightRopePos(climbArms, 80000, 0.4),
+                new RunPivotRopePos(climbArms, 140000),
+                new RunPivotPos(climbArms, 22000, 0.15)
+            ).andThen(new RunPivotRopePos(climbArms, 75000))
+            .andThen(new ParallelCommandGroup(
+                    new RunStraightRopePos(climbArms, 0, 0.7),
+                    new RunSmoothPivotPos(climbArms, -15000, 0.5, 1000)
+            )).andThen(new ParallelCommandGroup(
+                    new RunPivotRopePos(climbArms, 0),
+                    new RunStraightRopePos(climbArms, 75000, 0.7)
+            )).andThen(new RunPivotPos(climbArms, -4000, 0.3)) //Using smooth class freaks out
+            .andThen(new RunStraightRopePos(climbArms, 20000, 0.7))
+            .andThen(new RunPivotRopePos(climbArms, 50000))
+            .andThen(new RunPivotPos(climbArms, -15000, 0.15))
+            .andThen(new ParallelCommandGroup(
+                    new RunPivotRopePos(climbArms, 0),
+                    new RunStraightRopePos(climbArms, 75000, 0.7)
+            ))
+            .andThen(new RunPivotPos(climbArms, 10000, 0.15))
         , joyBPS));
 
         joyBX.whenPressed(new RequireButton(
-                new ParallelCommandGroup(
-                        new RunPivotPos(climbArms, -15000, 0.5),
-                        new RunStraightRopePos(climbArms, 25000),
-                        new RunPivotRopePos(climbArms, 75000)
-                ).andThen(new RunSmoothPivotPos(climbArms, 10000, 0.5, 1000))
-                .andThen(new ParallelCommandGroup(
-                        new RunPivotRopePos(climbArms, 0),
-                        new RunStraightRopePos(climbArms, 60000)
-                )).andThen(new RunSmoothPivotPos(climbArms, -5500, 0.5, 500))
-                .andThen(new RunBrake(climbArms, 60, 115))
-                .andThen(new RunStraightRopePos(climbArms, 20000))
-                .andThen(new RunShooterPivot(shooter, 8000))
+            new ParallelCommandGroup(
+                    new RunStraightRopePos(climbArms, 80000, 0.4),
+                    new RunPivotRopePos(climbArms, 140000),
+                    new RunPivotPos(climbArms, 22000, 0.15)
+            ).andThen(new RunPivotRopePos(climbArms, 75000))
+            .andThen(new ParallelCommandGroup(
+                    new RunStraightRopePos(climbArms, 60000, 0.7),
+                    new RunPivotRopePos(climbArms, 0)
+            )).andThen(new RunBrake(climbArms, 60, 115))
+            .andThen(new RunPivotPos(climbArms, -6250, 0.3))
+            .andThen(new RunStraightRopePos(climbArms, 20000, 0.7))
+            .andThen(new RunShooterPivot(shooter, 8000))
         , joyBPS));
 
         joyBSquare.whenPressed(new RequireButton(
                 new ParallelCommandGroup(
-                        new RunStraightRopePos(climbArms, 15000),
+                        new RunStraightRopePos(climbArms, 15000, 0.7),
                         new RunPivotRopePos(climbArms, 50000)
                 ).andThen(new RunPivotPos(climbArms, 1000, 0.15))
                 .andThen(new RunPivotRopePos(climbArms, 0))
@@ -164,7 +195,7 @@ public class RobotContainer {
         joyBBR.whileHeld(new RunShooterPivot(shooter, -6500)); //Set Pivot to stow
         joyPOVW.whileHeld(new RequireButton(new RunBrake(climbArms, 90, 90).andThen( //Oh-Shit Button
                 new ParallelCommandGroup(
-                        new RunStraightRopePosAdj(climbArms, -20000),
+                        new RunStraightRopePosAdj(climbArms, -20000, 0.7),
                         new RunPivotRopePosAdj(climbArms, -20000)
                 )//.andThen(new RunClimbPivotPIDToggle(climbArms, true)
                 //).andThen(new RunPivotPos(climbArms, 0, 0.15))
@@ -190,21 +221,14 @@ public class RobotContainer {
         sJoyBBL.whileHeld(new RunTargetShooterSpeed(shooter, limelight));
         sJoyBBL.whenReleased(new ParallelRaceGroup(new RunTimer(0.25), new RunShooterWheels(shooter, 0, 0)));
         sJoyBTL.whileHeld(new RunShooterRollers(shooter, -0.75, 0)); //Change later to 1 ball per click (pos)
-        sJoyBY.whenPressed(new RunShooterPivotAdj(shooter, 500, 0, -55500));
-        sJoyBA.whenPressed(new RunShooterPivotAdj(shooter, -500, 0, -55500));
+        sJoyPOVW.whenPressed(new RunShooterPivotAdj(shooter, 500, 0, -55500));
+        sJoyPOVE.whenPressed(new RunShooterPivotAdj(shooter, -500, 0, -55500));
         sJoyBRS.whileHeld(new ParallelCommandGroup(
                 new RunShooterWheels(shooter, -4096, 0),
                 new RunShooterRollers(shooter, -0.75, 0)
         ));
         sJoyPOVN.whileHeld(new RunShooterRollers(shooter, -0.75, 0));
         sJoyPOVS.whileHeld(new RunShooterRollers(shooter, 0.75, 0));
-        //Add sJoyBBack that is taco bell but 1 ball
-
-
-
-        //sJoyBTL.whenPressed(new RunPressedTest());
-        //sJoyBTL.whileHeld(new RunWhileHeldTest());
-        //sJoyBTL.whenReleased(new RunReleasedTest());
     }
 
     private double getSpeedFactor() {

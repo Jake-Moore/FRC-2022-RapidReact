@@ -28,7 +28,7 @@ public class ClimbArms extends SubsystemBase {
     public final Servo brakeR;
 
     //PID Sets
-    public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 64, 0.7);
+    public final PID ropePID = new PID(Constants.ROPE_P, Constants.ROPE_I, Constants.ROPE_D, Constants.ROPE_F, 64, 0.5);
     public final PID pivotPID = new PID(Constants.CLIMB_PIVOT_P, Constants.CLIMB_PIVOT_I, Constants.CLIMB_PIVOT_D, Constants.CLIMB_PIVOT_F, 128, 0.5);
 
     //Create the motors, invert a couple, help hold them in place, and zero encoders
@@ -102,6 +102,13 @@ public class ClimbArms extends SubsystemBase {
     public void setPivotMaxPower(double maxPower) {
         mPivoter.configPeakOutputForward(maxPower, Constants.TIMEOUT_MS);
         mPivoter.configPeakOutputReverse(-maxPower, Constants.TIMEOUT_MS);
+    }
+
+    public void setStraightArmsMaxPower(double maxPower) {
+        mLeftStraight.configPeakOutputForward(maxPower, Constants.TIMEOUT_MS);
+        mLeftStraight.configPeakOutputReverse(-maxPower, Constants.TIMEOUT_MS);
+        mRightStraight.configPeakOutputForward(maxPower, Constants.TIMEOUT_MS);
+        mRightStraight.configPeakOutputReverse(-maxPower, Constants.TIMEOUT_MS);
     }
 
     public void setPivotPIDEnabled(boolean enabled) {
