@@ -63,7 +63,7 @@ public class Constants {
     public static final double driveMaxPowerAuto = 0.225;
     public static final double driveMaxPowerTeleop = 1;
 
-    public static final double yawOffset = 1.75; //OOF (Positive will shoot more right, and vice versa)
+    public static final double yawOffset = -0.85; //OOF (Positive will shoot more right, and vice versa)
     public static final double leftPivotRopeMotorScalar = 1D;
     public static final double leftStraightRopeMotorScalar = 0.966D; //1.025, 0.966
 

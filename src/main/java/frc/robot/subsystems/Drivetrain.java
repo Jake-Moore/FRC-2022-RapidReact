@@ -11,9 +11,9 @@ import frc.robot.Constants;
 
 @SuppressWarnings("unused")
 public class Drivetrain extends SubsystemBase {
-    private final TalonFX mLeftA = new TalonFX(Constants.leftDriveAID);
+    public final TalonFX mLeftA = new TalonFX(Constants.leftDriveAID);
     private final TalonFX mLeftB = new TalonFX(Constants.leftDriveBID);
-    private final TalonFX mRightA = new TalonFX(Constants.rightDriveAID);
+    public final TalonFX mRightA = new TalonFX(Constants.rightDriveAID);
     private final TalonFX mRightB = new TalonFX(Constants.rightDriveBID);
 
     private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
@@ -138,6 +138,7 @@ public class Drivetrain extends SubsystemBase {
         double rotations = sectorLength/wheelCirc;
         return rotations*gearRatio*2048;
     }
+
 
     public void setDrivePositions(double left, double right) {
         mLeftA.set(ControlMode.Position, left);
