@@ -77,8 +77,8 @@ public class Drivetrain extends SubsystemBase {
         return overrideDrivetrain;
     }
 
+    //set the rotation of the robot to a certain angle
     public void setRotation(double setRotation) {
-        //this.setRotation = setRotation;
         double delta = getDeltaTargetPos(setRotation);
         mLeftA.set(ControlMode.Position, mLeftA.getSelectedSensorPosition()-delta);
         mRightA.set(ControlMode.Position, mRightA.getSelectedSensorPosition()+delta);
@@ -96,6 +96,9 @@ public class Drivetrain extends SubsystemBase {
 
     //Drive Modes
     public void driveFromJoysticks(double zoom, double nyoom) {
+        //zoom = (Math.abs(zoom) <= 0.025) ? 0 : zoom;
+        //nyoom = (Math.abs(nyoom) <= 0.025) ? 0 : nyoom;
+
         if (overrideDrivetrain) { return; }
         mLeftA.set(ControlMode.PercentOutput, nyoom - zoom);
         mRightA.set(ControlMode.PercentOutput, -nyoom - zoom);
@@ -119,7 +122,7 @@ public class Drivetrain extends SubsystemBase {
 
     //Gyroscope
     public double getGyroRot() {
-        return -gyro.getAngle();
+        return gyro.getAngle();
     }
 
     public void zeroGyro() {

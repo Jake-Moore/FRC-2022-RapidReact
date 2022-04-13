@@ -27,6 +27,14 @@ public class AutoPaths {
 
         trajs.add(
             new NamedCommand(
+            "Rotate 90",
+
+                new RunRotateBot(drivetrain, 90, true)
+            )
+        );
+
+        trajs.add(
+            new NamedCommand(
                 "Taxi Back + 1 Ball Forward",
 
                 new RunDrivePos(drivetrain, -getTicksFromDist(45), -getTicksFromDist(45))

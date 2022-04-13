@@ -18,7 +18,7 @@ public class JoystickAxisToButton {
         this.axis = axis;
 
         loop = new Notifier(() -> {
-            boolean pressed = joystick.getRawAxis(axis) >= 0.5;
+            boolean pressed = joystick.getRawAxis(axis) >= 0.1;
 
             if (!wasHeld && pressed) { //If newly pressed
                 runHeldCommands();
@@ -71,6 +71,6 @@ public class JoystickAxisToButton {
     }
 
     public boolean get() {
-        return joystick.getRawAxis(axis) >= 0.5;
+        return joystick.getRawAxis(axis) >= 0.1;
     }
 }

@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -11,7 +10,7 @@ public class RunRotateBot extends CommandBase {
     private final double deltaDegrees;
     private final boolean preciseIsFinished;
     private final Notifier aimbotLoop;
-    private double target;
+    private double targetRot;
 
     /**
      * Finishes When Rotation is Within 0.5 Degrees
@@ -23,7 +22,7 @@ public class RunRotateBot extends CommandBase {
 
         aimbotLoop = new Notifier(() -> {
             if (gyroBroke) { return; }
-            drivetrain.setRotation(target);
+            drivetrain.setRotation(targetRot);
             gyroBroke = drivetrain.getGyroRot() == -0D;
         });
     }
@@ -38,10 +37,11 @@ public class RunRotateBot extends CommandBase {
         drivetrain.setOverrideDrivetrain(true);
         drivetrain.setOutputs(0.1);
 
-        target = drivetrain.getGyroRot() + deltaDegrees;
-        drivetrain.setRotation(target);
-        aimbotLoop.startPeriodic(1);
+        targetRot = drivetrain.getGyroRot() + deltaDegrees;
+
+        drivetrain.setRotation(targetRot);
         gyroBroke = drivetrain.getGyroRot() == -0D;
+        aimbotLoop.startPeriodic(1);
     }
 
     @Override
@@ -54,10 +54,10 @@ public class RunRotateBot extends CommandBase {
     @Override
     public boolean isFinished() {
         if (!preciseIsFinished) {
-            return Math.abs(drivetrain.getGyroRot() - target) <= Constants.allowedYawError;
+            return Math.abs(drivetrain.getGyroRot() - targetRot) <= Constants.allowedYawError;
         }
 
-        if (Math.abs(drivetrain.getGyroRot() - target) <= Constants.allowedYawError) {
+        if (Math.abs(drivetrain.getGyroRot() - targetRot) <= Constants.allowedYawError) {
             successes++;
         }else {
             failures++;
