@@ -92,7 +92,7 @@ public class RobotContainer {
         cameras.enableCameras();
 
         //Drivetrain
-        drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * getSpeedFactor(), pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
+        drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * getSpeedFactor(), (pJoy.getRawAxis(2)/2.25D) * getSpeedFactor()), drivetrain //Functional, not tuned
         ));
 
         //-----START CLIMB-----//

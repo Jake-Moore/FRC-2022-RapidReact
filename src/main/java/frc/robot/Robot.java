@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
 
         //Auto Paths
         autoChooser.setDefaultOption("None", null);
+        speedChooser.setDefaultOption("Tire Preservation", 0.25);
         speedChooser.setDefaultOption("Normal", 0.65);
         speedChooser.addOption("Demon", 1.0);
         paths.put("None", null);

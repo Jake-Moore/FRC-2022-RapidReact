@@ -51,7 +51,8 @@ public class Shooter extends SubsystemBase {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                mPivoter.setSelectedSensorPosition((254 - getPivotAbsolutePos()) * (72706/142D)); //230.5
+                //230 normally, 254 when its being weird
+                mPivoter.setSelectedSensorPosition((230 - getPivotAbsolutePos()) * (72706/142D)); //230.5
             }
         }, 1000);
     }
