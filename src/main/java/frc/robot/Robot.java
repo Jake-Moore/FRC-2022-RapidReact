@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.NamedCommand;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Instant;
 import java.util.HashMap;
 
 /**
@@ -112,10 +113,26 @@ public class Robot extends TimedRobot {
         kRobotContainer.drivetrain.setOverrideDrivetrain(false);
     }
 
+    private boolean lastWasZero = false;
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
         CommandScheduler.getInstance().run();
+
+        SmartDashboard.putNumber("Epoch", Instant.now().getEpochSecond());
+        SmartDashboard.putBoolean("Spinning", kRobotContainer.manualSpinning);
+
+        if (!kRobotContainer.manualSpinning) {
+            if (!lastWasZero) {
+                kRobotContainer.shooter.setWheelSpeed(0D);
+                lastWasZero = true;
+            }
+            return;
+        }
+        if (kRobotContainer.manualActual == 0D && lastWasZero) { return; }
+
+        kRobotContainer.shooter.setWheelSpeed(kRobotContainer.manualActual);
+        lastWasZero = kRobotContainer.manualActual == 0D;
     }
 
     /** This function is called once when the robot is disabled. */

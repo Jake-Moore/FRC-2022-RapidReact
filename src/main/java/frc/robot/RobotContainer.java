@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -12,7 +13,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.util.*;
+import frc.robot.util.AutoPaths;
+import frc.robot.util.JoystickAxisToButton;
+import frc.robot.util.RequireButton;
+
+import java.time.Instant;
 
 @SuppressWarnings("unused")
 public class RobotContainer {
@@ -23,6 +28,9 @@ public class RobotContainer {
     public final Limelight limelight = new Limelight();
     public final Cameras cameras = new Cameras();
     public final SendableChooser<Double> speedChooser;
+    public double manualActual = -10000;
+    public boolean manualSpinning = false;
+    public boolean lastWasZero = false;
 
     public AutoPaths ap = new AutoPaths(climbArms, drivetrain, shooter, limelight);
 
@@ -57,6 +65,7 @@ public class RobotContainer {
     private final JoystickButton sJoyBBL = new JoystickButton(sJoy, 5); //Left Bumper Button
     private final JoystickButton sJoyBBR = new JoystickButton(sJoy, 6); //Right Bumper Button
     private final JoystickButton sJoyBBack = new JoystickButton(sJoy, 7); //Back Button
+    private final JoystickButton sJoyBStart = new JoystickButton(sJoy, 8); //Back Button
     private final JoystickAxisToButton sJoyBTR = new JoystickAxisToButton(sJoy, 3);
     private final JoystickAxisToButton sJoyBTL = new JoystickAxisToButton(sJoy, 2);
 
@@ -83,8 +92,7 @@ public class RobotContainer {
         cameras.enableCameras();
 
         //Drivetrain
-        drivetrain.setDefaultCommand(new RunCommand(() ->
-                drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * getSpeedFactor(), pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
+        drivetrain.setDefaultCommand(new RunCommand(() -> drivetrain.driveFromJoysticks(powAxis(pJoy.getRawAxis(1), 7D/3D) * getSpeedFactor(), pJoy.getRawAxis(2)/2.25D), drivetrain //Functional, not tuned
         ));
 
         //-----START CLIMB-----//
@@ -182,6 +190,7 @@ public class RobotContainer {
         //Primary Controller Buttons//
         joyBLeftJoystick.whileHeld(new RunLights(limelight, 3, 3)); //Lights TODO make 3, 1
         joyBTL.whileHeld(new ParallelCommandGroup(
+                new RunCommand(() -> manualSpinning = false),
                 new RunShooterWheels(shooter, 6144, 0), //Intake Wheels
                 new RunShooterRollers(shooter, 0.5, 0) //Slightly Intake Rollers
         ));
@@ -227,14 +236,16 @@ public class RobotContainer {
         sJoyBBL.whileHeld(new RunTargetShooterSpeed(shooter, limelight));
         sJoyBBL.whenReleased(new ParallelRaceGroup(new RunTimer(0.25), new RunShooterWheels(shooter, 0, 0)));
         sJoyBTL.whileHeld(new RunShooterRollers(shooter, -0.75, 0)); //Change later to 1 ball per click (pos)
-        sJoyPOVW.whenPressed(new RunShooterPivotAdj(shooter, 500, 0, -55500));
-        sJoyPOVE.whenPressed(new RunShooterPivotAdj(shooter, -500, 0, -55500));
+        sJoyPOVW.whileHeld(new RunShooterPivotAdj(shooter, -50, 0, -55500));
+        sJoyPOVE.whileHeld(new RunShooterPivotAdj(shooter, 50, 0, -55500));
         sJoyBRS.whileHeld(new ParallelCommandGroup(
                 new RunShooterWheels(shooter, -4096, 0),
                 new RunShooterRollers(shooter, -0.75, 0)
         ));
-        sJoyPOVN.whileHeld(new RunShooterRollers(shooter, -0.75, 0));
-        sJoyPOVS.whileHeld(new RunShooterRollers(shooter, 0.75, 0));
+
+        sJoyPOVN.whileHeld(new RunCommand(() -> manualActual = Math.max(-20000, manualActual - 25)));
+        sJoyPOVS.whileHeld(new RunCommand(() -> manualActual = Math.min(0, manualActual + 25)));
+        sJoyBStart.whenPressed(new RunToggleShooterWheels(this));
     }
 
     private double getSpeedFactor() {
